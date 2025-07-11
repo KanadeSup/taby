@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "name in manifest.json",
+  "description": "description in manifest.json",
+  "chrome_url_overrides": {
+    "newtab": "new-tab/index.html"
+  },
+  "icons": {
+    "128": "icon-128.png"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "contentStyle.css",
+        "icon-128.png",
+        "icon-32.png"
+      ],
+      "matches": []
+    }
+  ]
+}
