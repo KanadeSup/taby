@@ -1,9 +1,10 @@
 import { createRoot } from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { createHashHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import "@assets/css/tailwind.css"
 
-const router = createRouter({ routeTree });
+const hashHistory = createHashHistory()
+const router = createRouter({ routeTree, history: hashHistory });
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {

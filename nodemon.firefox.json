@@ -3,8 +3,10 @@
     "__DEV__": "true"
   },
   "watch": [
-    "src",
-    "utils",
+    "new-tab",
+    "lib",
+    "assets",
+    "components",
     "vite.config.base.ts",
     "vite.config.firefox.ts",
     "manifest.json",

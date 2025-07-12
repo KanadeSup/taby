@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MindspacesIndexRouteImport } from './routes/mindspaces/index'
+import { Route as MindspacesIdRouteImport } from './routes/mindspaces/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MindspacesIndexRoute = MindspacesIndexRouteImport.update({
+  id: '/mindspaces/',
+  path: '/mindspaces/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MindspacesIdRoute = MindspacesIdRouteImport.update({
+  id: '/mindspaces/$id',
+  path: '/mindspaces/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/mindspaces/$id': typeof MindspacesIdRoute
+  '/mindspaces': typeof MindspacesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/mindspaces/$id': typeof MindspacesIdRoute
+  '/mindspaces': typeof MindspacesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/mindspaces/$id': typeof MindspacesIdRoute
+  '/mindspaces/': typeof MindspacesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/mindspaces/$id' | '/mindspaces'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/mindspaces/$id' | '/mindspaces'
+  id: '__root__' | '/' | '/mindspaces/$id' | '/mindspaces/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MindspacesIdRoute: typeof MindspacesIdRoute
+  MindspacesIndexRoute: typeof MindspacesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mindspaces/': {
+      id: '/mindspaces/'
+      path: '/mindspaces'
+      fullPath: '/mindspaces'
+      preLoaderRoute: typeof MindspacesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mindspaces/$id': {
+      id: '/mindspaces/$id'
+      path: '/mindspaces/$id'
+      fullPath: '/mindspaces/$id'
+      preLoaderRoute: typeof MindspacesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MindspacesIdRoute: MindspacesIdRoute,
+  MindspacesIndexRoute: MindspacesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
