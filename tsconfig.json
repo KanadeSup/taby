@@ -22,6 +22,8 @@
       "@assets/*": ["assets/*"],
       "@lib/*": ["lib/*"],
       "@components/*": ["components/*"],
+      "@api/*": ["api/*"],
+      "@hooks/*": ["hooks/*"]
     }
   },
   "include": [
@@ -29,6 +31,8 @@
     "lib",
     "assets",
     "components",
+    "api",
+    "hooks",
     "utils",
     "vite.config.base.ts",
     "vite.config.chrome.ts",

@@ -1,7 +1,10 @@
 import { cn } from "@/lib/shadnc-utils";
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { MindspaceDialog } from "../Dialog/MindspaceDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createMindspace, getMindspaces } from "@/api/mindspace";
+import { Mindspace } from "@/lib/db";
+import { useMindspaces } from "@/hooks/useMindspaces";
 
 export type MindspaceSidebarProps = {
    rootClassName?: string;
@@ -27,6 +30,11 @@ function Header() {
 
 function MindSpaceList() {
    const [isMindspaceDialogOpen, setIsMindspaceDialogOpen] = useState(false);
+   const { mindspaces, isLoading, error, refetch } = useMindspaces();
+   const handleCreateMindspace = (mindspaceName: string) => {
+      createMindspace(mindspaceName);
+      refetch();
+   };
    const handleOpenAddMindspaceDialog = () => {
       setIsMindspaceDialogOpen(true);
    };
@@ -45,14 +53,25 @@ function MindSpaceList() {
          </div>
          {/* List item */}
          <div className="flex flex-col gap-1">
-            <MindspaceItem title="Mindspace 1" />
-            <MindspaceItem title="Mindspace 2" />
-            <MindspaceItem title="Mindspace 3" />
+            {isLoading && (
+               <div className="flex items-center justify-center">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+               </div>
+            )}
+            {error && (
+               <div className="flex items-center justify-center">
+                  <p className="text-red-500">{error}</p>
+               </div>
+            )}
+            {mindspaces.map((mindspace) => (
+               <MindspaceItem key={mindspace.id} title={mindspace.name} />
+            ))}
          </div>
          {/* Dialog */}
          <MindspaceDialog
             open={isMindspaceDialogOpen}
             onClose={handleCloseAddMindspaceDialog}
+            onSubmit={handleCreateMindspace}
          />
       </div>
    );

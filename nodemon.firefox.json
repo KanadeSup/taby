@@ -5,6 +5,8 @@
   "watch": [
     "new-tab",
     "lib",
+    "api",
+    "hooks",
     "assets",
     "components",
     "vite.config.base.ts",
