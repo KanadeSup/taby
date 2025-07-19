@@ -11,11 +11,11 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "@newtab/components",
-    "utils": "@newtab/lib/utils",
-    "ui": "@newtab/components/ui",
-    "lib": "@newtab/lib",
-    "hooks": "@newtab/hooks"
+    "components": "@/components",
+    "utils": "@/lib/shadnc-utils",
+    "ui": "@/components/shadcn",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
   },
   "iconLibrary": "lucide"
 }

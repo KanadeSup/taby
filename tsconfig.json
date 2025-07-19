@@ -17,6 +17,7 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
+      "@/*": ["./*"],
       "@newtab/*": ["new-tab/*"],
       "@assets/*": ["assets/*"],
       "@lib/*": ["lib/*"],
@@ -32,5 +33,5 @@
     "vite.config.base.ts",
     "vite.config.chrome.ts",
     "vite.config.firefox.ts"
-  ],
+, "docker/nodejs/utils.ts"  ],
 }

@@ -1,5 +1,7 @@
-import { cn } from "@newtab/lib/utils";
+import { cn } from "@/lib/shadnc-utils";
 import { Plus } from "lucide-react";
+import { MindspaceDialog } from "../Dialog/MindspaceDialog";
+import { useState } from "react";
 
 export type MindspaceSidebarProps = {
    rootClassName?: string;
@@ -24,12 +26,22 @@ function Header() {
 }
 
 function MindSpaceList() {
+   const [isMindspaceDialogOpen, setIsMindspaceDialogOpen] = useState(false);
+   const handleOpenAddMindspaceDialog = () => {
+      setIsMindspaceDialogOpen(true);
+   };
+   const handleCloseAddMindspaceDialog = () => {
+      setIsMindspaceDialogOpen(false);
+   };
    return (
       <div className="py-2 px-1 space-y-1">
          {/* Header */}
          <div className="flex items-center justify-between">
             <h1 className="font-bold text-xs px-2 text-gray-300">MINDSPACES</h1>
-            <Plus className="w-6 h-6 text-gray-300 cursor-pointer hover:bg-accent p-1 rounded-sm" />
+            <Plus
+               className="w-6 h-6 text-gray-300 cursor-pointer hover:bg-accent p-1 rounded-sm"
+               onClick={handleOpenAddMindspaceDialog}
+            />
          </div>
          {/* List item */}
          <div className="flex flex-col gap-1">
@@ -37,6 +49,11 @@ function MindSpaceList() {
             <MindspaceItem title="Mindspace 2" />
             <MindspaceItem title="Mindspace 3" />
          </div>
+         {/* Dialog */}
+         <MindspaceDialog
+            open={isMindspaceDialogOpen}
+            onClose={handleCloseAddMindspaceDialog}
+         />
       </div>
    );
 }

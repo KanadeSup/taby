@@ -18,6 +18,7 @@
   "type": "module",
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-slot": "^1.2.3",
     "@tanstack/react-router": "^1.127.0",
     "@tanstack/react-router-devtools": "^1.127.0",
     "class-variance-authority": "^0.7.1",
