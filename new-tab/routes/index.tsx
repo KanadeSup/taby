@@ -1,6 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
+   loader: async ({ location }) => {
+      if (location.pathname === "/") {
+         return redirect({ to: "/mindspaces" });
+      }
+   },
    component: Index,
 });
 
