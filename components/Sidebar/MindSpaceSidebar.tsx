@@ -1,8 +1,8 @@
 import { cn } from "@/lib/shadnc-utils";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { MindspaceDialog } from "../Dialog/MindspaceDialog";
 import { useEffect, useState } from "react";
-import { createMindspace, getMindspaces } from "@/api/mindspace";
+import { createMindspace, deleteMindspace, getMindspaces } from "@/api/mindspace";
 import { Mindspace } from "@/lib/db";
 import { useMindspaces } from "@/hooks/useMindspaces";
 
@@ -41,6 +41,16 @@ function MindSpaceList() {
    const handleCloseAddMindspaceDialog = () => {
       setIsMindspaceDialogOpen(false);
    };
+   const handleDeleteMindspace = (mindspaceId: number) => {
+      deleteMindspace(mindspaceId);
+      refetch();
+   };
+   const handleEditMindspace = (mindspaceId: number) => {
+      setIsMindspaceDialogOpen(true);
+   };
+   const handleSelectMindspace = (mindspaceId: number) => {
+      console.log(mindspaceId);
+   };
    return (
       <div className="py-2 px-1 space-y-1">
          {/* Header */}
@@ -64,7 +74,13 @@ function MindSpaceList() {
                </div>
             )}
             {mindspaces.map((mindspace) => (
-               <MindspaceItem key={mindspace.id} title={mindspace.name} />
+               <MindspaceItem
+                  key={mindspace.id}
+                  title={mindspace.name}
+                  onDelete={() => handleDeleteMindspace(mindspace.id)}
+                  onEdit={() => handleEditMindspace(mindspace.id)}
+                  onSelect={() => handleSelectMindspace(mindspace.id)}
+               />
             ))}
          </div>
          {/* Dialog */}
@@ -79,14 +95,28 @@ function MindSpaceList() {
 
 export type MindspaceItemProps = {
    title: string;
+   onDelete?: () => void;
+   onEdit?: () => void;
+   onSelect?: () => void;
 };
 
 function MindspaceItem(props: MindspaceItemProps) {
-   const { title } = props;
+   const { title, onDelete, onEdit, onSelect } = props;
    return (
-      <div className="flex items-center justify-between px-2 py-1 cursor-pointer hover:bg-accent rounded-sm transition-all">
-         <div className="flex flex-col">
-            <h1 className="font-bold text-gray-300 text-sm">{title}</h1>
+      <div
+         className="flex items-center justify-between px-2 py-1 cursor-pointer hover:bg-accent rounded-sm transition-all group"
+         onClick={onSelect}
+      >
+         <h1 className="font-bold text-gray-300 text-sm">{title}</h1>
+         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+            <Pencil
+               className="w-4 h-4 text-gray-300 cursor-pointer hover:text-blue-500"
+               onClick={onEdit}
+            />
+            <Trash2
+               className="w-4 h-4 text-gray-300 cursor-pointer hover:text-red-500"
+               onClick={onDelete}
+            />
          </div>
       </div>
    );
