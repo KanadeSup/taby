@@ -39,7 +39,7 @@ const onNodeDrag: OnNodeDrag = (_, node) => {
    console.log("drag event", node.data);
 };
 
-export function MindTab() {
+export function MindFlow() {
    const [nodes, setNodes] = useState<Node[]>(initialNodes);
    const [edges, setEdges] = useState<Edge[]>(initialEdges);
 
