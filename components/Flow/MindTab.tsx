@@ -14,9 +14,14 @@ import {
    type DefaultEdgeOptions,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { RootNode } from "./RootNode";
+
+const NodeTypes = {
+   root: RootNode,
+};
 
 const initialNodes: Node[] = [
-   { id: "1", data: { label: "Node 1" }, position: { x: 5, y: 5 } },
+   { id: "1", type: "root", data: { label: "Root" }, position: { x: 5, y: 5 }, draggable: false },
    { id: "2", data: { label: "Node 2" }, position: { x: 5, y: 100 } },
 ];
 
@@ -54,6 +59,7 @@ export function MindTab() {
    return (
       <ReactFlow
          nodes={nodes}
+         nodeTypes={NodeTypes}
          colorMode="dark"
          edges={edges}
          onNodesChange={onNodesChange}
