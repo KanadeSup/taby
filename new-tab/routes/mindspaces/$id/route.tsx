@@ -1,3 +1,4 @@
+import { MindTab } from '@/components/Flow/MindTab'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/mindspaces/$id')({
@@ -5,5 +6,5 @@ export const Route = createFileRoute('/mindspaces/$id')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/mindspacsses/$id"!</div>
+  return <MindTab />
 }
