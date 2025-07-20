@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { createMindspace, deleteMindspace, getMindspaces, updateMindspace } from "@/api/mindspace";
 import { Mindspace } from "@/lib/db";
 import { useMindspaces } from "@/hooks/useMindspaces";
+import { useNavigate } from "@tanstack/react-router";
 
 export type MindspaceSidebarProps = {
    rootClassName?: string;
@@ -13,7 +14,7 @@ export type MindspaceSidebarProps = {
 export function MindspaceSidebar(props: MindspaceSidebarProps) {
    const { rootClassName } = props;
    return (
-      <div className={cn("h-full max-w-64", rootClassName)}>
+      <div className={cn("h-full w-64", rootClassName)}>
          <Header />
          <MindSpaceList />
       </div>
@@ -35,11 +36,11 @@ function MindSpaceList() {
       mindspaceId: null as number | null,
    });
    const { mindspaces, isLoading, error, refetch } = useMindspaces();
+   const navigate = useNavigate();
    const handleSubmitMindspaceDialog = (
       mindspaceName: string,
       mindspaceId?: number,
    ) => {
-      console.log(mindspaceName, mindspaceId);
       if (mindspaceId) {
          updateMindspace(mindspaceId, mindspaceName);
       } else {
@@ -73,7 +74,12 @@ function MindSpaceList() {
       });
    };
    const handleSelectMindspace = (mindspaceId: number) => {
-      console.log(mindspaceId);
+      navigate({
+         to: "/mindspaces/$id",
+         params: {
+            id: mindspaceId.toString(),
+         },
+      });
    };
    return (
       <div className="py-2 px-1 space-y-1">
