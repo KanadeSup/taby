@@ -11,3 +11,12 @@ export function getMindspaces() {
 export function deleteMindspace(id: number) {
    return db.mindspaces.delete(id);
 }
+
+export function getMindspace(id: number) {
+   return db.mindspaces.get(id);
+}
+
+export function updateMindspace(id: number, name: string) {
+   console.log(id, name);
+   return db.mindspaces.update(id, { name });
+}

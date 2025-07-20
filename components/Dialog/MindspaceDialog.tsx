@@ -8,17 +8,20 @@ import {
 } from "@/components/shadcn/dialog";
 import { MyButton } from "../Button/MyButton";
 import { MyTextInput } from "../Input/MyTextInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MyTextarea } from "../Input/MyTextarea";
+import { getMindspace } from "@/api/mindspace";
 
 export type MindspaceDialogProps = {
    open: boolean;
+   type: "create" | "edit";
+   mindspaceId?: number;
    onClose?: () => void;
-   onSubmit?: (mindspaceName: string) => void;
+   onSubmit?: (mindspaceName: string, mindspaceId?: number) => void;
 };
 
 export function MindspaceDialog(props: MindspaceDialogProps) {
-   const { open, onClose, onSubmit } = props;
+   const { open, type, mindspaceId, onClose, onSubmit } = props;
    const [inputValues, setInputValues] = useState({
       mindspaceName: "",
       mindspaceDescription: "",
@@ -26,11 +29,31 @@ export function MindspaceDialog(props: MindspaceDialogProps) {
    const [inputsValidiation, setInputsValidiation] = useState({
       mindspaceName: false,
    });
+   const isEditMode = type === "edit" && mindspaceId !== undefined;
 
-   const handleCreateMindspace = () => {
-      onSubmit?.(inputValues.mindspaceName.trim());
+   useEffect(() => {
+      const fetchMindspace = async () => {
+         if (isEditMode) {
+            const mindspace = await getMindspace(mindspaceId);
+            if (mindspace) {
+               setInputValues({
+                  mindspaceName: mindspace.name,
+                  mindspaceDescription: "",
+               });
+               setInputsValidiation({
+                  mindspaceName: true,
+               });
+            }
+         }
+      };
+      fetchMindspace();
+   }, [isEditMode, mindspaceId]);
+
+   const handleSubmit = () => {
+      onSubmit?.(inputValues.mindspaceName.trim(), mindspaceId);
       onClose?.();
    };
+
    const handleInputChange = (type: "name" | "description", value: string) => {
       const inputValue = value;
       switch (type) {
@@ -62,9 +85,13 @@ export function MindspaceDialog(props: MindspaceDialogProps) {
       <Dialog open={open} onOpenChange={onClose}>
          <DialogContent>
             <DialogHeader>
-               <DialogTitle>Create New Mindspace</DialogTitle>
+               <DialogTitle>
+                  {isEditMode ? "Edit Mindspace" : "Create New Mindspace"}
+               </DialogTitle>
                <DialogDescription>
-                  Add a new mindspace to your workspace.
+                  {isEditMode
+                     ? "Edit the mindspace."
+                     : "Add a new mindspace."}
                </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-2">
@@ -92,10 +119,10 @@ export function MindspaceDialog(props: MindspaceDialogProps) {
                </MyButton>
                <MyButton
                   className="text-sm"
-                  onClick={handleCreateMindspace}
+                  onClick={handleSubmit}
                   disabled={!inputsValidiation.mindspaceName}
                >
-                  Create Mindspace
+                  {isEditMode ? "Save Changes" : "Create Mindspace"}
                </MyButton>
             </DialogFooter>
          </DialogContent>

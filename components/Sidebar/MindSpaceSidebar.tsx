@@ -2,7 +2,7 @@ import { cn } from "@/lib/shadnc-utils";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { MindspaceDialog } from "../Dialog/MindspaceDialog";
 import { useEffect, useState } from "react";
-import { createMindspace, deleteMindspace, getMindspaces } from "@/api/mindspace";
+import { createMindspace, deleteMindspace, getMindspaces, updateMindspace } from "@/api/mindspace";
 import { Mindspace } from "@/lib/db";
 import { useMindspaces } from "@/hooks/useMindspaces";
 
@@ -29,24 +29,48 @@ function Header() {
 }
 
 function MindSpaceList() {
-   const [isMindspaceDialogOpen, setIsMindspaceDialogOpen] = useState(false);
+   const [isMindspaceDialogOpen, setIsMindspaceDialogOpen] = useState({
+      open: false,
+      type: "create" as "create" | "edit",
+      mindspaceId: null as number | null,
+   });
    const { mindspaces, isLoading, error, refetch } = useMindspaces();
-   const handleCreateMindspace = (mindspaceName: string) => {
-      createMindspace(mindspaceName);
+   const handleSubmitMindspaceDialog = (
+      mindspaceName: string,
+      mindspaceId?: number,
+   ) => {
+      console.log(mindspaceName, mindspaceId);
+      if (mindspaceId) {
+         updateMindspace(mindspaceId, mindspaceName);
+      } else {
+         createMindspace(mindspaceName);
+      }
       refetch();
    };
    const handleOpenAddMindspaceDialog = () => {
-      setIsMindspaceDialogOpen(true);
+      setIsMindspaceDialogOpen({
+         open: true,
+         type: "create",
+         mindspaceId: null,
+      });
    };
    const handleCloseAddMindspaceDialog = () => {
-      setIsMindspaceDialogOpen(false);
+      setIsMindspaceDialogOpen({
+         open: false,
+         type: "create",
+         mindspaceId: null,
+      });
    };
    const handleDeleteMindspace = (mindspaceId: number) => {
       deleteMindspace(mindspaceId);
       refetch();
    };
    const handleEditMindspace = (mindspaceId: number) => {
-      setIsMindspaceDialogOpen(true);
+      setIsMindspaceDialogOpen({
+         open: true,
+         type: "edit",
+         mindspaceId,
+      });
    };
    const handleSelectMindspace = (mindspaceId: number) => {
       console.log(mindspaceId);
@@ -85,9 +109,11 @@ function MindSpaceList() {
          </div>
          {/* Dialog */}
          <MindspaceDialog
-            open={isMindspaceDialogOpen}
+            open={isMindspaceDialogOpen.open}
+            type={isMindspaceDialogOpen.type}
+            mindspaceId={isMindspaceDialogOpen.mindspaceId ?? undefined}
             onClose={handleCloseAddMindspaceDialog}
-            onSubmit={handleCreateMindspace}
+            onSubmit={handleSubmitMindspaceDialog}
          />
       </div>
    );
