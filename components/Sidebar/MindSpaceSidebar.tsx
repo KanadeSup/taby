@@ -63,7 +63,7 @@ function MindSpaceList() {
          </div>
          {/* List item */}
          <div className="flex flex-col gap-1">
-            {isLoading && (
+            {mindspaces.length === 0 && isLoading && (
                <div className="flex items-center justify-center">
                   <Loader2 className="w-4 h-4 animate-spin" />
                </div>
