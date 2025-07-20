@@ -15,14 +15,31 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { RootNode } from "./RootNode";
+import { TabNode } from "./TabNode";
 
 const NodeTypes = {
    root: RootNode,
+   tab: TabNode,
 };
 
 const initialNodes: Node[] = [
-   { id: "1", type: "root", data: { label: "Root" }, position: { x: 5, y: 5 }, draggable: false },
-   { id: "2", data: { label: "Node 2" }, position: { x: 5, y: 100 } },
+   {
+      id: "1",
+      type: "root",
+      data: { label: "Root" },
+      position: { x: 5, y: 5 },
+      draggable: false,
+   },
+   {
+      id: "2",
+      type: "tab",
+      data: {
+         title: "Tab",
+         url: "https://www.google.com",
+         description: "Tab description",
+      },
+      position: { x: 5, y: 100 },
+   },
 ];
 
 const initialEdges: Edge[] = [{ id: "e1-2", source: "1", target: "2" }];
