@@ -23,7 +23,8 @@
       "@lib/*": ["lib/*"],
       "@components/*": ["components/*"],
       "@api/*": ["api/*"],
-      "@hooks/*": ["hooks/*"]
+      "@hooks/*": ["hooks/*"],
+      "@types/*": ["types/*"]
     }
   },
   "include": [
@@ -34,8 +35,10 @@
     "api",
     "hooks",
     "utils",
+    "types",
     "vite.config.base.ts",
     "vite.config.chrome.ts",
-    "vite.config.firefox.ts"
-, "docker/nodejs/utils.ts"  ],
+    "vite.config.firefox.ts",
+    "docker/nodejs/utils.ts",
+  ],
 }

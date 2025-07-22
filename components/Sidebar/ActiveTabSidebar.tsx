@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
+import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
 
 export function ActiveTabSidebar() {
    const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
+   const { setDragActiveTab} = useMindFlowStateStore(
+      (state) => state.action
+   );
    useEffect(() => {
       chrome.tabs.query({}, (tabs) => {
-         console.log("tabs", tabs);
-         setTabs(tabs);
+         setTabs(tabs.filter((tab) => tab.url));
       });
    }, []);
    return (
@@ -19,6 +22,13 @@ export function ActiveTabSidebar() {
                   <div
                      key={tab.id}
                      className="flex items-center gap-2 p-2 cursor-pointer rounded-md hover:bg-accent"
+                     onDragStart={() => {
+                        setDragActiveTab({
+                           title: tab.title ?? "Untitled",
+                           url: tab.url ?? "",
+                           favIconUrl: tab.favIconUrl,
+                        });
+                     }}
                      draggable
                   >
                      {tab.favIconUrl && (

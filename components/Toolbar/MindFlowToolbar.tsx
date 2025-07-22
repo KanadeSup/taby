@@ -1,9 +1,9 @@
 import { Sidebar } from "lucide-react";
 import { IconButton } from "../Button/IconButton";
-import { useMindFlowLayoutStore } from "../Provider/MindFlowLayoutProvider";
+import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
 
 export function MindFlowToolbar() {
-   const { toggleActiveTabSidebar } = useMindFlowLayoutStore(
+   const { toggleActiveTabSidebar } = useMindFlowStateStore(
       (state) => state.action
    );
 

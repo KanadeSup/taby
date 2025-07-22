@@ -22,12 +22,13 @@ import { MindFlowToolbar } from "../Toolbar/MindFlowToolbar";
 import { ActiveTabSidebar } from "../Sidebar/ActiveTabSidebar";
 import {
    MindFlowLayoutProvider,
-   useMindFlowLayoutStore,
-} from "../Provider/MindFlowLayoutProvider";
+   useMindFlowStateStore,
+} from "../Provider/MindFlowStateProvider";
 import { cn } from "@/lib/shadnc-utils";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DragPlaceholderNode } from "../FlowNode/DragPlaceholderNode";
+import { useShallow } from "zustand/shallow";
 
 const NodeTypes = {
    root: RootNode,
@@ -80,8 +81,11 @@ const onNodeDrag: OnNodeDrag = (_, node) => {
 function Flow() {
    const [nodes, setNodes] = useState<Node[]>(initialNodes);
    const [edges, setEdges] = useState<Edge[]>(initialEdges);
-   const isActiveTabSidebarOpen = useMindFlowLayoutStore(
-      (state) => state.isActiveTabSidebarOpen
+   const { isActiveTabSidebarOpen, dragActiveTab } = useMindFlowStateStore(
+      useShallow((state) => ({
+         isActiveTabSidebarOpen: state.isActiveTabSidebarOpen,
+         dragActiveTab: state.dragActiveTab,
+      }))
    );
    const { screenToFlowPosition } = useReactFlow();
    const onNodesChange: OnNodesChange = useCallback(
@@ -132,6 +136,12 @@ function Flow() {
             }
          }}
          onDrop={(e) => {
+            if (!dragActiveTab) {
+               setNodes((nodes) =>
+                  nodes.filter((node) => node.id !== "drag-placeholder-node")
+               );
+               return;
+            }
             const { clientX, clientY } = e;
             const flowPosition = screenToFlowPosition({
                x: clientX,
@@ -143,9 +153,10 @@ function Flow() {
                id: "tab-node-" + Date.now(),
                type: "tab",
                data: {
-                  title: "Tab",
-                  url: "https://www.google.com",
-                  description: "Tab description",
+                  title: dragActiveTab.title,
+                  url: dragActiveTab.url,
+                  description: "",
+                  favIconUrl: dragActiveTab.favIconUrl,
                },
                position: flowPosition,
             };
