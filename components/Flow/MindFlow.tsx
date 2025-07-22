@@ -19,6 +19,11 @@ import { RootNode } from "./RootNode";
 import { TabNode } from "./TabNode";
 import { MindFlowToolbar } from "../Toolbar/MindFlowToolbar";
 import { ActiveTabSidebar } from "../Sidebar/ActiveTabSidebar";
+import {
+   MindFlowLayoutProvider,
+   useMindFlowLayoutStore,
+} from "../Provider/MindFlowLayoutProvider";
+import { cn } from "@/lib/shadnc-utils";
 
 const NodeTypes = {
    root: RootNode,
@@ -67,10 +72,13 @@ const onNodeDrag: OnNodeDrag = (_, node) => {
    console.log("drag event", node.data);
 };
 
-export function MindFlow() {
+function Flow() {
    const [nodes, setNodes] = useState<Node[]>(initialNodes);
    const [edges, setEdges] = useState<Edge[]>(initialEdges);
-
+   const isActiveTabSidebarOpen = useMindFlowLayoutStore(
+      (state) => state.isActiveTabSidebarOpen
+   );
+   console.log("isActiveTabSidebarOpen", isActiveTabSidebarOpen);
    const onNodesChange: OnNodesChange = useCallback(
       (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
       [setNodes]
@@ -101,9 +109,23 @@ export function MindFlow() {
          <Panel position="top-center" className="w-full">
             <MindFlowToolbar />
          </Panel>
-         <Panel position="center-right" className="h-[85%]">
+         <Panel
+            position="center-right"
+            className={cn(
+               "h-[85%]",
+               isActiveTabSidebarOpen ? "block" : "hidden"
+            )}
+         >
             <ActiveTabSidebar />
          </Panel>
       </ReactFlow>
+   );
+}
+
+export function MindFlow() {
+   return (
+      <MindFlowLayoutProvider>
+         <Flow />
+      </MindFlowLayoutProvider>
    );
 }

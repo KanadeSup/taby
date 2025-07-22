@@ -1,7 +1,12 @@
 import { Sidebar } from "lucide-react";
 import { IconButton } from "../Button/IconButton";
+import { useMindFlowLayoutStore } from "../Provider/MindFlowLayoutProvider";
 
 export function MindFlowToolbar() {
+   const { toggleActiveTabSidebar } = useMindFlowLayoutStore(
+      (state) => state.action
+   );
+
    return (
       <div className="w-full px-4">
          <div className="bg-gray-600 rounded-md px-2 py-1 flex items-center justify-between">
@@ -11,7 +16,7 @@ export function MindFlowToolbar() {
             <div></div>
             {/* Right side */}
             <div>
-               <IconButton>
+               <IconButton onClick={() => toggleActiveTabSidebar()}>
                   <Sidebar className="w-4 h-4" />
                </IconButton>
             </div>
