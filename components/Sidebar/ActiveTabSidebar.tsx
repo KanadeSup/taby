@@ -19,6 +19,7 @@ export function ActiveTabSidebar() {
                   <div
                      key={tab.id}
                      className="flex items-center gap-2 p-2 cursor-pointer rounded-md hover:bg-accent"
+                     draggable
                   >
                      {tab.favIconUrl && (
                         <img src={tab.favIconUrl} className="w-4 h-4 rounded" />

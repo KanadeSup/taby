@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
    ReactFlow,
    addEdge,
@@ -13,10 +13,11 @@ import {
    type OnNodeDrag,
    type DefaultEdgeOptions,
    Panel,
+   useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { RootNode } from "./RootNode";
-import { TabNode } from "./TabNode";
+import { RootNode } from "../FlowNode/RootNode";
+import { TabNode } from "../FlowNode/TabNode";
 import { MindFlowToolbar } from "../Toolbar/MindFlowToolbar";
 import { ActiveTabSidebar } from "../Sidebar/ActiveTabSidebar";
 import {
@@ -24,10 +25,14 @@ import {
    useMindFlowLayoutStore,
 } from "../Provider/MindFlowLayoutProvider";
 import { cn } from "@/lib/shadnc-utils";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DragPlaceholderNode } from "../FlowNode/DragPlaceholderNode";
 
 const NodeTypes = {
    root: RootNode,
    tab: TabNode,
+   dragPlaceholder: DragPlaceholderNode,
 };
 
 const initialNodes: Node[] = [
@@ -78,7 +83,7 @@ function Flow() {
    const isActiveTabSidebarOpen = useMindFlowLayoutStore(
       (state) => state.isActiveTabSidebarOpen
    );
-   console.log("isActiveTabSidebarOpen", isActiveTabSidebarOpen);
+   const { screenToFlowPosition } = useReactFlow();
    const onNodesChange: OnNodesChange = useCallback(
       (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
       [setNodes]
@@ -94,6 +99,62 @@ function Flow() {
 
    return (
       <ReactFlow
+         onDragOver={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const { clientX, clientY } = e;
+            const flowPosition = screenToFlowPosition({
+               x: clientX,
+               y: clientY,
+            });
+            flowPosition.x = flowPosition.x - 176 / 2;
+            flowPosition.y = flowPosition.y - 80 / 2;
+            if (nodes[nodes.length - 1].id === "drag-placeholder-node") {
+               setNodes((nodes) =>
+                  nodes.map((node) => {
+                     if (node.id === "drag-placeholder-node") {
+                        return {
+                           ...node,
+                           position: flowPosition,
+                        };
+                     }
+                     return node;
+                  })
+               );
+            } else {
+               const placeholderNode = {
+                  id: "drag-placeholder-node",
+                  type: "dragPlaceholder",
+                  data: {},
+                  position: flowPosition,
+               };
+               setNodes((nodes) => [...nodes, placeholderNode]);
+            }
+         }}
+         onDrop={(e) => {
+            const { clientX, clientY } = e;
+            const flowPosition = screenToFlowPosition({
+               x: clientX,
+               y: clientY,
+            });
+            flowPosition.x = flowPosition.x - 176 / 2;
+            flowPosition.y = flowPosition.y - 80 / 2;
+            const tabNode = {
+               id: "tab-node-" + Date.now(),
+               type: "tab",
+               data: {
+                  title: "Tab",
+                  url: "https://www.google.com",
+                  description: "Tab description",
+               },
+               position: flowPosition,
+            };
+            let newNodes = [...nodes, tabNode];
+            newNodes = newNodes.filter(
+               (node) => node.id !== "drag-placeholder-node"
+            );
+            setNodes(newNodes);
+         }}
          nodes={nodes}
          nodeTypes={NodeTypes}
          colorMode="dark"

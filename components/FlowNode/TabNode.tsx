@@ -8,9 +8,9 @@ export function TabNode(props: NodeProps) {
       description: string;
    };
    return (
-      <div className="flex">
+      <div className="flex w-44 h-20">
          <Handle id="left" type="target" position={Position.Left} />
-         <div className="border border-accent rounded-sm bg-black/80 hover:border-blue-700/40">
+         <div className="w-full border border-accent rounded-sm bg-black/80 hover:border-blue-400/40">
             <div className="px-3 py-1 border-b border-accent flex items-center gap-1 text-gray-200">
                <Globe className="w-3 h-3" />
                <h1 className="text-sm font-semibold">{title}</h1>
