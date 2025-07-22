@@ -42,14 +42,22 @@ const initialNodes: Node[] = [
    },
 ];
 
-const initialEdges: Edge[] = [{ id: "e1-2", source: "1", target: "2" }];
+const initialEdges: Edge[] = [
+   {
+      id: "e1-2",
+      source: "1",
+      target: "2",
+      targetHandle: "right",
+      style: { stroke: "white" },
+   },
+];
 
 const fitViewOptions: FitViewOptions = {
    padding: 0.2,
 };
 
 const defaultEdgeOptions: DefaultEdgeOptions = {
-   animated: true,
+   animated: false,
 };
 
 const onNodeDrag: OnNodeDrag = (_, node) => {
