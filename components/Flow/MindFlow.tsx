@@ -12,10 +12,13 @@ import {
    type OnEdgesChange,
    type OnNodeDrag,
    type DefaultEdgeOptions,
+   Panel,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { RootNode } from "./RootNode";
 import { TabNode } from "./TabNode";
+import { MindFlowToolbar } from "../Toolbar/MindFlowToolbar";
+import { ActiveTabSidebar } from "../Sidebar/ActiveTabSidebar";
 
 const NodeTypes = {
    root: RootNode,
@@ -94,6 +97,13 @@ export function MindFlow() {
          fitView
          fitViewOptions={fitViewOptions}
          defaultEdgeOptions={defaultEdgeOptions}
-      />
+      >
+         <Panel position="top-center" className="w-full">
+            <MindFlowToolbar />
+         </Panel>
+         <Panel position="center-right" className="h-[85%]">
+            <ActiveTabSidebar />
+         </Panel>
+      </ReactFlow>
    );
 }
