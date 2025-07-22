@@ -112,8 +112,8 @@ function Flow() {
          <Panel
             position="center-right"
             className={cn(
-               "h-[85%]",
-               isActiveTabSidebarOpen ? "block" : "hidden"
+               "h-[92%] transition-transform duration-300 translate-y-[30px]",
+               isActiveTabSidebarOpen ? "translate-x-0" : "translate-x-[110%]"
             )}
          >
             <ActiveTabSidebar />

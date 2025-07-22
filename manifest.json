@@ -9,7 +9,7 @@
     "128": "icon-128.png"
   },
   "permissions": [
-    "activeTab"
+    "tabs"
   ],
   "web_accessible_resources": [
     {
