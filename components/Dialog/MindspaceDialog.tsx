@@ -11,6 +11,7 @@ import { MyTextInput } from "../Input/MyTextInput";
 import { useEffect, useState } from "react";
 import { MyTextarea } from "../Input/MyTextarea";
 import { getMindspace } from "@/api/mindspace";
+import { IconSelector } from "../IconSelector/IconSelector";
 
 export type MindspaceDialogProps = {
    open: boolean;
@@ -89,17 +90,18 @@ export function MindspaceDialog(props: MindspaceDialogProps) {
                   {isEditMode ? "Edit Mindspace" : "Create New Mindspace"}
                </DialogTitle>
                <DialogDescription>
-                  {isEditMode
-                     ? "Edit the mindspace."
-                     : "Add a new mindspace."}
+                  {isEditMode ? "Edit the mindspace." : "Add a new mindspace."}
                </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-2">
-               <MyTextInput
-                  placeholder="Mindspace Name"
-                  value={inputValues.mindspaceName}
-                  onChange={(e) => handleInputChange("name", e.target.value)}
-               />
+               <div className="flex items-center gap-2">
+                  <IconSelector buttonClassName="w-9 h-9 border border-input bg-input/30" />
+                  <MyTextInput
+                     placeholder="Mindspace Name"
+                     value={inputValues.mindspaceName}
+                     onChange={(e) => handleInputChange("name", e.target.value)}
+                  />
+               </div>
                <MyTextarea
                   placeholder="Description (optional) ...."
                   value={inputValues.mindspaceDescription}
