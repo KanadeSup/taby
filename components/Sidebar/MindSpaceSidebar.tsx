@@ -1,5 +1,5 @@
 import { cn } from "@/lib/shadnc-utils";
-import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
+import { Loader2, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { MindspaceDialog } from "../Dialog/MindspaceDialog";
 import { useState } from "react";
 import {
@@ -10,6 +10,7 @@ import {
 import { useMindspaces } from "@/hooks/useMindspaces";
 import { useNavigate } from "@tanstack/react-router";
 import * as lucidIcon from "lucide-react";
+import { MyTextInput } from "../Input/MyTextInput";
 
 export type MindspaceSidebarProps = {
    rootClassName?: string;
@@ -18,8 +19,9 @@ export type MindspaceSidebarProps = {
 export function MindspaceSidebar(props: MindspaceSidebarProps) {
    const { rootClassName } = props;
    return (
-      <div className={cn("h-full w-64", rootClassName)}>
+      <div className={cn("h-full w-64 space-y-4", rootClassName)}>
          <Header />
+         <SearchSection />
          <MindSpaceList />
       </div>
    );
@@ -29,6 +31,19 @@ function Header() {
    return (
       <div className="border-b border-gray-500">
          <h1 className="text-lg font-bold text-center p-2"> Tabby AI </h1>
+      </div>
+   );
+}
+
+function SearchSection() {
+   const [search, setSearch] = useState("");
+   return (
+      <div className="flex items-center gap-2 px-2">
+         <MyTextInput
+            placeholder="Search for a mindspace"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+         />
       </div>
    );
 }
@@ -87,7 +102,7 @@ function MindSpaceList() {
       });
    };
    return (
-      <div className="py-2 px-1 space-y-1">
+      <div className="px-1 space-y-1">
          {/* Header */}
          <div className="flex items-center justify-between">
             <h1 className="font-bold text-xs px-2 text-gray-300">MINDSPACES</h1>
@@ -146,12 +161,12 @@ function MindspaceItem(props: MindspaceItemProps) {
    ] as React.ElementType;
    return (
       <div
-         className="flex items-center justify-between px-2 py-1 cursor-pointer hover:bg-accent rounded-sm transition-all group"
+         className="flex items-center justify-between px-2 py-2 cursor-pointer hover:bg-accent rounded-sm transition-all group"
          onClick={onSelect}
       >
          <div className="flex items-center gap-2">
             <IconComponent className="w-4 h-4 text-gray-300" />
-            <h1 className="font-bold text-gray-300 text-sm">{title}</h1>
+            <h1 className="text-gray-300 text-sm">{title}</h1>
          </div>
          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
             <Pencil
