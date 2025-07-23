@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import {
    ReactFlow,
    addEdge,
@@ -37,27 +37,6 @@ const NodeTypes = {
 };
 const MIN_DISTANCE = 500;
 
-const initialNodes: Node[] = [
-   {
-      id: "1",
-      type: "root",
-      data: { label: "Root" },
-      position: { x: 5, y: 5 },
-      draggable: false,
-      className: "connectable-node",
-   },
-];
-
-const initialEdges: Edge[] = [
-   {
-      id: "e1-2",
-      source: "1",
-      target: "2",
-      targetHandle: "right",
-      style: { stroke: "white" },
-   },
-];
-
 const fitViewOptions: FitViewOptions = {
    padding: 0.2,
 };
@@ -67,15 +46,16 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
 };
 
 function Flow() {
-   const [nodes, setNodes] = useState<Node[]>(initialNodes);
-   const [edges, setEdges] = useState<Edge[]>(initialEdges);
    const store = useStoreApi();
-   const { isActiveTabSidebarOpen, dragActiveTab } = useMindFlowStateStore(
+   const { isActiveTabSidebarOpen, dragActiveTab, nodes, edges } = useMindFlowStateStore(
       useShallow((state) => ({
          isActiveTabSidebarOpen: state.isActiveTabSidebarOpen,
          dragActiveTab: state.dragActiveTab,
+         nodes: state.nodes,
+         edges: state.edges,
       }))
    );
+   const { setNodes, setEdges } = useMindFlowStateStore(state => state.action);
    const { getInternalNode } = useReactFlow();
    const { screenToFlowPosition } = useReactFlow();
    const onNodesChange: OnNodesChange = useCallback(
