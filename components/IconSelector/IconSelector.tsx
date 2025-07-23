@@ -1,10 +1,10 @@
-import { UserRound } from "lucide-react";
 import { IconButton } from "../Button/IconButton";
 import { Popover, PopoverContent, PopoverTrigger } from "../shadcn/popover";
-import * as lucidIcon from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { ScrollArea } from "../shadcn/scroll-area";
 import { MyTextInput } from "../Input/MyTextInput";
+import * as lucidIcon from "lucide-react";
+
 export type IconSelectorProps = {
    buttonClassName?: string;
    onIconSelect?: (iconName: string) => void;

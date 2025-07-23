@@ -1,11 +1,15 @@
 import { cn } from "@/lib/shadnc-utils";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { MindspaceDialog } from "../Dialog/MindspaceDialog";
-import { useEffect, useState } from "react";
-import { createMindspace, deleteMindspace, getMindspaces, updateMindspace } from "@/api/mindspace";
-import { Mindspace } from "@/lib/db";
+import { useState } from "react";
+import {
+   createMindspace,
+   deleteMindspace,
+   updateMindspace,
+} from "@/api/mindspace";
 import { useMindspaces } from "@/hooks/useMindspaces";
 import { useNavigate } from "@tanstack/react-router";
+import * as lucidIcon from "lucide-react";
 
 export type MindspaceSidebarProps = {
    rootClassName?: string;
@@ -39,12 +43,13 @@ function MindSpaceList() {
    const navigate = useNavigate();
    const handleSubmitMindspaceDialog = (
       mindspaceName: string,
-      mindspaceId?: number,
+      mindspaceIcon: string,
+      mindspaceId?: number
    ) => {
       if (mindspaceId) {
-         updateMindspace(mindspaceId, mindspaceName);
+         updateMindspace(mindspaceId, mindspaceName, mindspaceIcon);
       } else {
-         createMindspace(mindspaceName);
+         createMindspace(mindspaceName, mindspaceIcon);
       }
       refetch();
    };
@@ -107,6 +112,7 @@ function MindSpaceList() {
                <MindspaceItem
                   key={mindspace.id}
                   title={mindspace.name}
+                  icon={mindspace.icon}
                   onDelete={() => handleDeleteMindspace(mindspace.id)}
                   onEdit={() => handleEditMindspace(mindspace.id)}
                   onSelect={() => handleSelectMindspace(mindspace.id)}
@@ -127,19 +133,26 @@ function MindSpaceList() {
 
 export type MindspaceItemProps = {
    title: string;
+   icon: string;
    onDelete?: () => void;
    onEdit?: () => void;
    onSelect?: () => void;
 };
 
 function MindspaceItem(props: MindspaceItemProps) {
-   const { title, onDelete, onEdit, onSelect } = props;
+   const { title, icon, onDelete, onEdit, onSelect } = props;
+   const IconComponent = lucidIcon[
+      (icon as keyof typeof lucidIcon) || "UserRound"
+   ] as React.ElementType;
    return (
       <div
          className="flex items-center justify-between px-2 py-1 cursor-pointer hover:bg-accent rounded-sm transition-all group"
          onClick={onSelect}
       >
-         <h1 className="font-bold text-gray-300 text-sm">{title}</h1>
+         <div className="flex items-center gap-2">
+            <IconComponent className="w-4 h-4 text-gray-300" />
+            <h1 className="font-bold text-gray-300 text-sm">{title}</h1>
+         </div>
          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
             <Pencil
                className="w-4 h-4 text-gray-300 cursor-pointer hover:text-blue-500"

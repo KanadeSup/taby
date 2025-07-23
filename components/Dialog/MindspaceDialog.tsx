@@ -18,7 +18,11 @@ export type MindspaceDialogProps = {
    type: "create" | "edit";
    mindspaceId?: number;
    onClose?: () => void;
-   onSubmit?: (mindspaceName: string, mindspaceId?: number) => void;
+   onSubmit?: (
+      mindspaceName: string,
+      mindspaceIcon: string,
+      mindspaceId?: number
+   ) => void;
 };
 
 export function MindspaceDialog(props: MindspaceDialogProps) {
@@ -26,6 +30,7 @@ export function MindspaceDialog(props: MindspaceDialogProps) {
    const [inputValues, setInputValues] = useState({
       mindspaceName: "",
       mindspaceDescription: "",
+      mindspaceIcon: "",
    });
    const [inputsValidiation, setInputsValidiation] = useState({
       mindspaceName: false,
@@ -40,6 +45,7 @@ export function MindspaceDialog(props: MindspaceDialogProps) {
                setInputValues({
                   mindspaceName: mindspace.name,
                   mindspaceDescription: "",
+                  mindspaceIcon: "",
                });
                setInputsValidiation({
                   mindspaceName: true,
@@ -51,11 +57,18 @@ export function MindspaceDialog(props: MindspaceDialogProps) {
    }, [isEditMode, mindspaceId]);
 
    const handleSubmit = () => {
-      onSubmit?.(inputValues.mindspaceName.trim(), mindspaceId);
+      onSubmit?.(
+         inputValues.mindspaceName.trim(),
+         inputValues.mindspaceIcon,
+         mindspaceId
+      );
       onClose?.();
    };
 
-   const handleInputChange = (type: "name" | "description", value: string) => {
+   const handleInputChange = (
+      type: "name" | "description" | "icon",
+      value: string
+   ) => {
       const inputValue = value;
       switch (type) {
          case "name":
@@ -79,6 +92,12 @@ export function MindspaceDialog(props: MindspaceDialogProps) {
                mindspaceDescription: inputValue,
             });
             break;
+         case "icon":
+            setInputValues({
+               ...inputValues,
+               mindspaceIcon: inputValue,
+            });
+            break;
       }
    };
 
@@ -95,7 +114,10 @@ export function MindspaceDialog(props: MindspaceDialogProps) {
             </DialogHeader>
             <div className="flex flex-col gap-2">
                <div className="flex items-center gap-2">
-                  <IconSelector buttonClassName="w-9 h-9 border border-input bg-input/30" />
+                  <IconSelector
+                     buttonClassName="w-9 h-9 border border-input bg-input/30"
+                     onIconSelect={(icon) => handleInputChange("icon", icon)}
+                  />
                   <MyTextInput
                      placeholder="Mindspace Name"
                      value={inputValues.mindspaceName}
