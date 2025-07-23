@@ -14,6 +14,8 @@ import {
    type DefaultEdgeOptions,
    Panel,
    useReactFlow,
+   useStoreApi,
+   InternalNode,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { RootNode } from "../FlowNode/RootNode";
@@ -25,8 +27,6 @@ import {
    useMindFlowStateStore,
 } from "../Provider/MindFlowStateProvider";
 import { cn } from "@/lib/shadnc-utils";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { DragPlaceholderNode } from "../FlowNode/DragPlaceholderNode";
 import { useShallow } from "zustand/shallow";
 
@@ -35,6 +35,7 @@ const NodeTypes = {
    tab: TabNode,
    dragPlaceholder: DragPlaceholderNode,
 };
+const MIN_DISTANCE = 500;
 
 const initialNodes: Node[] = [
    {
@@ -43,6 +44,7 @@ const initialNodes: Node[] = [
       data: { label: "Root" },
       position: { x: 5, y: 5 },
       draggable: false,
+      className: "connectable-node",
    },
    {
       id: "2",
@@ -74,19 +76,17 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
    animated: false,
 };
 
-const onNodeDrag: OnNodeDrag = (_, node) => {
-   console.log("drag event", node.data);
-};
-
 function Flow() {
    const [nodes, setNodes] = useState<Node[]>(initialNodes);
    const [edges, setEdges] = useState<Edge[]>(initialEdges);
+   const store = useStoreApi();
    const { isActiveTabSidebarOpen, dragActiveTab } = useMindFlowStateStore(
       useShallow((state) => ({
          isActiveTabSidebarOpen: state.isActiveTabSidebarOpen,
          dragActiveTab: state.dragActiveTab,
       }))
    );
+   const { getInternalNode } = useReactFlow();
    const { screenToFlowPosition } = useReactFlow();
    const onNodesChange: OnNodesChange = useCallback(
       (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -101,6 +101,54 @@ function Flow() {
       [setEdges]
    );
 
+   const getClosestEdge = useCallback((nodeId: string) => {
+      const { nodeLookup } = store.getState();
+      const internalNode = getInternalNode(nodeId);
+      if (!internalNode) return null;
+      const closestNode = Array.from(nodeLookup.values()).reduce<{
+         distance: number;
+         node: InternalNode<Node> | null;
+      }>(
+         (closest, node) => {
+            if (node.id === internalNode.id) return closest;
+            if (node.className !== "connectable-node") return closest;
+            const dx =
+               node.internals.positionAbsolute.x -
+               internalNode.internals.positionAbsolute.x;
+            const dy =
+               node.internals.positionAbsolute.y -
+               internalNode.internals.positionAbsolute.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < closest.distance && distance < MIN_DISTANCE) {
+               closest.distance = distance;
+               closest.node = node;
+            }
+            return closest;
+         },
+         { distance: Infinity, node: null }
+      );
+      if (!closestNode.node) return null;
+      const useRightHandle =
+         closestNode.node.internals.positionAbsolute.x <
+         internalNode.internals.positionAbsolute.x;
+      return {
+         id: `${closestNode.node.id}-${nodeId}-${useRightHandle ? "right" : "left"}`,
+         source: closestNode.node.id,
+         target: nodeId,
+         targetHandle: useRightHandle ? "left" : "right",
+         sourceHandle: useRightHandle ? "right" : "left",
+         className: "tmp",
+         style: {
+            strokeDasharray: "5 5",
+            stroke: "white",
+            strokeWidth: 1,
+         },
+         animated: true,
+      };
+   }, []);
+
+   const onNodeDrag: OnNodeDrag = (_, node) => {};
+
    return (
       <ReactFlow
          onDragOver={(e) => {
@@ -113,7 +161,10 @@ function Flow() {
             });
             flowPosition.x = flowPosition.x - 176 / 2;
             flowPosition.y = flowPosition.y - 80 / 2;
+            let placeHolderNode: Node;
             if (nodes[nodes.length - 1].id === "drag-placeholder-node") {
+               placeHolderNode = nodes[nodes.length - 1];
+               placeHolderNode.position = flowPosition;
                setNodes((nodes) =>
                   nodes.map((node) => {
                      if (node.id === "drag-placeholder-node") {
@@ -126,14 +177,23 @@ function Flow() {
                   })
                );
             } else {
-               const placeholderNode = {
+               placeHolderNode = {
                   id: "drag-placeholder-node",
                   type: "dragPlaceholder",
                   data: {},
                   position: flowPosition,
                };
-               setNodes((nodes) => [...nodes, placeholderNode]);
+               setNodes((nodes) => [...nodes, placeHolderNode]);
             }
+            const closestEdge = getClosestEdge(placeHolderNode.id);
+            setEdges((eds) => {
+               const nextEdges = eds.filter((ed) => ed.className !== "tmp");
+               if (closestEdge) {
+                  closestEdge.className = "tmp";
+                  nextEdges.push(closestEdge);
+               }
+               return nextEdges;
+            });
          }}
          onDrop={(e) => {
             if (!dragActiveTab) {
@@ -165,6 +225,24 @@ function Flow() {
                (node) => node.id !== "drag-placeholder-node"
             );
             setNodes(newNodes);
+            // set edge
+            setTimeout(() => {
+               const closestEdge = getClosestEdge(tabNode.id);
+               setEdges((eds) => {
+                  const nextEdges = eds.filter((ed) => ed.className !== "tmp");
+                  if (closestEdge) {
+                     closestEdge.animated = false;
+                     closestEdge.className = "";
+                     closestEdge.style = {
+                        strokeDasharray: "0 0",
+                        stroke: "white",
+                        strokeWidth: 1,
+                     };
+                     nextEdges.push(closestEdge);
+                  }
+                  return nextEdges;
+               });
+            }, 0);
          }}
          nodes={nodes}
          nodeTypes={NodeTypes}
