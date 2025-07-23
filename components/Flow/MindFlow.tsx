@@ -29,6 +29,7 @@ import {
 import { cn } from "@/lib/shadnc-utils";
 import { DragPlaceholderNode } from "../FlowNode/DragPlaceholderNode";
 import { useShallow } from "zustand/shallow";
+import { CalculateDimension } from "../CalculateDimension/CalculateDimension";
 
 const NodeTypes = {
    root: RootNode,
@@ -47,15 +48,18 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
 
 function Flow() {
    const store = useStoreApi();
-   const { isActiveTabSidebarOpen, dragActiveTab, nodes, edges } = useMindFlowStateStore(
-      useShallow((state) => ({
-         isActiveTabSidebarOpen: state.isActiveTabSidebarOpen,
-         dragActiveTab: state.dragActiveTab,
-         nodes: state.nodes,
-         edges: state.edges,
-      }))
+   const { isActiveTabSidebarOpen, dragActiveTab, nodes, edges } =
+      useMindFlowStateStore(
+         useShallow((state) => ({
+            isActiveTabSidebarOpen: state.isActiveTabSidebarOpen,
+            dragActiveTab: state.dragActiveTab,
+            nodes: state.nodes,
+            edges: state.edges,
+         }))
+      );
+   const { setNodes, setEdges } = useMindFlowStateStore(
+      (state) => state.action
    );
-   const { setNodes, setEdges } = useMindFlowStateStore(state => state.action);
    const { getInternalNode } = useReactFlow();
    const { screenToFlowPosition } = useReactFlow();
    const onNodesChange: OnNodesChange = useCallback(
@@ -118,127 +122,146 @@ function Flow() {
    }, []);
 
    const onNodeDrag: OnNodeDrag = (_, node) => {};
-
    return (
-      <ReactFlow
-         onDragOver={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const { clientX, clientY } = e;
-            const flowPosition = screenToFlowPosition({
-               x: clientX,
-               y: clientY,
-            });
-            flowPosition.x = flowPosition.x - 176 / 2;
-            flowPosition.y = flowPosition.y - 80 / 2;
-            let placeHolderNode: Node;
-            if (nodes[nodes.length - 1].id === "drag-placeholder-node") {
-               placeHolderNode = nodes[nodes.length - 1];
-               placeHolderNode.position = flowPosition;
-               setNodes((nodes) =>
-                  nodes.map((node) => {
-                     if (node.id === "drag-placeholder-node") {
-                        return {
-                           ...node,
+      <CalculateDimension>
+         {(width, height) => {
+            if (width === 0 || height === 0) return null;
+            return (
+               <ReactFlow
+                  onDragOver={(e) => {
+                     e.preventDefault();
+                     e.stopPropagation();
+                     const { clientX, clientY } = e;
+                     const flowPosition = screenToFlowPosition({
+                        x: clientX,
+                        y: clientY,
+                     });
+                     flowPosition.x = flowPosition.x - 176 / 2;
+                     flowPosition.y = flowPosition.y - 80 / 2;
+                     let placeHolderNode: Node;
+                     if (
+                        nodes[nodes.length - 1].id === "drag-placeholder-node"
+                     ) {
+                        placeHolderNode = nodes[nodes.length - 1];
+                        placeHolderNode.position = flowPosition;
+                        setNodes((nodes) =>
+                           nodes.map((node) => {
+                              if (node.id === "drag-placeholder-node") {
+                                 return {
+                                    ...node,
+                                    position: flowPosition,
+                                 };
+                              }
+                              return node;
+                           })
+                        );
+                     } else {
+                        placeHolderNode = {
+                           id: "drag-placeholder-node",
+                           type: "dragPlaceholder",
+                           data: {},
                            position: flowPosition,
                         };
+                        setNodes((nodes) => [...nodes, placeHolderNode]);
                      }
-                     return node;
-                  })
-               );
-            } else {
-               placeHolderNode = {
-                  id: "drag-placeholder-node",
-                  type: "dragPlaceholder",
-                  data: {},
-                  position: flowPosition,
-               };
-               setNodes((nodes) => [...nodes, placeHolderNode]);
-            }
-            const closestEdge = getClosestEdge(placeHolderNode.id);
-            setEdges((eds) => {
-               const nextEdges = eds.filter((ed) => ed.className !== "tmp");
-               if (closestEdge) {
-                  closestEdge.className = "tmp";
-                  nextEdges.push(closestEdge);
-               }
-               return nextEdges;
-            });
-         }}
-         onDrop={(e) => {
-            if (!dragActiveTab) {
-               setNodes((nodes) =>
-                  nodes.filter((node) => node.id !== "drag-placeholder-node")
-               );
-               return;
-            }
-            const { clientX, clientY } = e;
-            const flowPosition = screenToFlowPosition({
-               x: clientX,
-               y: clientY,
-            });
-            flowPosition.x = flowPosition.x - 176 / 2;
-            flowPosition.y = flowPosition.y - 80 / 2;
-            const tabNode = {
-               id: "tab-node-" + Date.now(),
-               type: "tab",
-               data: {
-                  title: dragActiveTab.title,
-                  url: dragActiveTab.url,
-                  description: "",
-                  favIconUrl: dragActiveTab.favIconUrl,
-               },
-               position: flowPosition,
-            };
-            let newNodes = [...nodes, tabNode];
-            newNodes = newNodes.filter(
-               (node) => node.id !== "drag-placeholder-node"
-            );
-            setNodes(newNodes);
-            // set edge
-            setTimeout(() => {
-               const closestEdge = getClosestEdge(tabNode.id);
-               setEdges((eds) => {
-                  const nextEdges = eds.filter((ed) => ed.className !== "tmp");
-                  if (closestEdge) {
-                     closestEdge.animated = false;
-                     closestEdge.className = "";
-                     closestEdge.style = {
-                        strokeDasharray: "0 0",
-                        stroke: "white",
-                        strokeWidth: 1,
+                     const closestEdge = getClosestEdge(placeHolderNode.id);
+                     setEdges((eds) => {
+                        const nextEdges = eds.filter(
+                           (ed) => ed.className !== "tmp"
+                        );
+                        if (closestEdge) {
+                           closestEdge.className = "tmp";
+                           nextEdges.push(closestEdge);
+                        }
+                        return nextEdges;
+                     });
+                  }}
+                  onDrop={(e) => {
+                     if (!dragActiveTab) {
+                        setNodes((nodes) =>
+                           nodes.filter(
+                              (node) => node.id !== "drag-placeholder-node"
+                           )
+                        );
+                        return;
+                     }
+                     const { clientX, clientY } = e;
+                     const flowPosition = screenToFlowPosition({
+                        x: clientX,
+                        y: clientY,
+                     });
+                     flowPosition.x = flowPosition.x - 176 / 2;
+                     flowPosition.y = flowPosition.y - 80 / 2;
+                     const tabNode = {
+                        id: "tab-node-" + Date.now(),
+                        type: "tab",
+                        data: {
+                           title: dragActiveTab.title,
+                           url: dragActiveTab.url,
+                           description: "",
+                           favIconUrl: dragActiveTab.favIconUrl,
+                        },
+                        position: flowPosition,
                      };
-                     nextEdges.push(closestEdge);
-                  }
-                  return nextEdges;
-               });
-            }, 0);
+                     let newNodes = [...nodes, tabNode];
+                     newNodes = newNodes.filter(
+                        (node) => node.id !== "drag-placeholder-node"
+                     );
+                     setNodes(newNodes);
+                     // set edge
+                     setTimeout(() => {
+                        const closestEdge = getClosestEdge(tabNode.id);
+                        setEdges((eds) => {
+                           const nextEdges = eds.filter(
+                              (ed) => ed.className !== "tmp"
+                           );
+                           if (closestEdge) {
+                              closestEdge.animated = false;
+                              closestEdge.className = "";
+                              closestEdge.style = {
+                                 strokeDasharray: "0 0",
+                                 stroke: "white",
+                                 strokeWidth: 1,
+                              };
+                              nextEdges.push(closestEdge);
+                           }
+                           return nextEdges;
+                        });
+                     }, 0);
+                  }}
+                  nodes={nodes}
+                  nodeTypes={NodeTypes}
+                  colorMode="dark"
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onConnect={onConnect}
+                  onNodeDrag={onNodeDrag}
+                  defaultEdgeOptions={defaultEdgeOptions}
+                  defaultViewport={{
+                     x: width / 2,
+                     y: height / 2,
+                     zoom: 1,
+                  }}
+               >
+                  <Panel position="top-center" className="w-full">
+                     <MindFlowToolbar />
+                  </Panel>
+                  <Panel
+                     position="center-right"
+                     className={cn(
+                        "h-[92%] transition-transform duration-300 translate-y-[30px]",
+                        isActiveTabSidebarOpen
+                           ? "translate-x-0"
+                           : "translate-x-[110%]"
+                     )}
+                  >
+                     <ActiveTabSidebar />
+                  </Panel>
+               </ReactFlow>
+            );
          }}
-         nodes={nodes}
-         nodeTypes={NodeTypes}
-         colorMode="dark"
-         edges={edges}
-         onNodesChange={onNodesChange}
-         onEdgesChange={onEdgesChange}
-         onConnect={onConnect}
-         onNodeDrag={onNodeDrag}
-         fitView
-         fitViewOptions={fitViewOptions}
-         defaultEdgeOptions={defaultEdgeOptions}
-      >
-         <Panel position="top-center" className="w-full">
-            <MindFlowToolbar />
-         </Panel>
-         <Panel
-            position="center-right"
-            className={cn(
-               "h-[92%] transition-transform duration-300 translate-y-[30px]",
-               isActiveTabSidebarOpen ? "translate-x-0" : "translate-x-[110%]"
-            )}
-         >
-            <ActiveTabSidebar />
-         </Panel>
-      </ReactFlow>
+      </CalculateDimension>
    );
 }
 
