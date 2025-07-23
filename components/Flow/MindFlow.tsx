@@ -46,16 +46,6 @@ const initialNodes: Node[] = [
       draggable: false,
       className: "connectable-node",
    },
-   {
-      id: "2",
-      type: "tab",
-      data: {
-         title: "Tab",
-         url: "https://www.google.com",
-         description: "Tab description",
-      },
-      position: { x: 5, y: 100 },
-   },
 ];
 
 const initialEdges: Edge[] = [
