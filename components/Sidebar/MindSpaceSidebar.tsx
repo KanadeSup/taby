@@ -19,10 +19,11 @@ export type MindspaceSidebarProps = {
 export function MindspaceSidebar(props: MindspaceSidebarProps) {
    const { rootClassName } = props;
    return (
-      <div className={cn("h-full w-64 space-y-4", rootClassName)}>
+      <div className={cn("h-full w-64 flex flex-col gap-4", rootClassName)}>
          <Header />
          <SearchSection />
          <MindSpaceList />
+         <SettingsSection />
       </div>
    );
 }
@@ -177,6 +178,21 @@ function MindspaceItem(props: MindspaceItemProps) {
                className="w-4 h-4 text-gray-300 cursor-pointer hover:text-red-500"
                onClick={onDelete}
             />
+         </div>
+      </div>
+   );
+}
+
+function SettingsSection() {
+   return (
+      <div className="flex flex-col px-2 mt-auto py-2">
+         <div className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-sm transition-all p-2 w-full">
+            <lucidIcon.Settings className="w-4 h-4 text-gray-300" />
+            <h1 className="text-gray-300 text-sm">Profile Settings</h1>
+         </div>
+         <div className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-sm transition-all p-2 w-full">
+            <lucidIcon.Settings className="w-4 h-4 text-gray-300" />
+            <h1 className="text-gray-300 text-sm">Mindspace Settings</h1>
          </div>
       </div>
    );
