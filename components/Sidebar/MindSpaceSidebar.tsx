@@ -11,6 +11,7 @@ import { useMindspaces } from "@/hooks/useMindspaces";
 import { useNavigate } from "@tanstack/react-router";
 import * as lucidIcon from "lucide-react";
 import { MyTextInput } from "../Input/MyTextInput";
+import { MyButton } from "../Button/MyButton";
 
 export type MindspaceSidebarProps = {
    rootClassName?: string;
@@ -23,7 +24,13 @@ export function MindspaceSidebar(props: MindspaceSidebarProps) {
          <Header />
          <SearchSection />
          <MindSpaceList />
-         <SettingsSection />
+         <div className="mt-auto px-2">
+            <MyButton variant="outline" className="w-full">
+               <lucidIcon.LogIn className="w-4 h-4 text-gray-300" />
+               Login
+            </MyButton>
+            <SettingsSection />
+         </div>
       </div>
    );
 }
@@ -185,7 +192,7 @@ function MindspaceItem(props: MindspaceItemProps) {
 
 function SettingsSection() {
    return (
-      <div className="flex flex-col px-2 mt-auto py-2">
+      <div className="flex flex-col py-2">
          <div className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-sm transition-all p-2 w-full">
             <lucidIcon.Settings className="w-4 h-4 text-gray-300" />
             <h1 className="text-gray-300 text-sm">Profile Settings</h1>
