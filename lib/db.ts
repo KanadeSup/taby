@@ -1,18 +1,3 @@
-import Dexie, { type EntityTable } from "dexie";
+import AppDB from "@/lib/AppDB";
 
-interface Mindspace {
-   id: number;
-   name: string;
-   icon: string;
-}
-
-const db = new Dexie("TabbyDB") as Dexie & {
-   mindspaces: EntityTable<Mindspace, "id">;
-};
-
-db.version(2).stores({
-   mindspaces: "++id, name, icon",
-});
-
-export type { Mindspace };
-export { db };
+export const db = new AppDB();

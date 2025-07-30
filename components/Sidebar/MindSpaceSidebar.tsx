@@ -18,6 +18,10 @@ import {
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from "../shadcn/dropdown-menu";
+import { CreateProfileDialog } from "../Dialog/CreateProfileDialog";
+import { useProfiles } from "@/hooks/useProfile";
+import { createProfile } from "@/api/profile";
+import { useCurrentProfileContext } from "../Provider/CurrentProfileProvider";
 
 export type MindspaceSidebarProps = {
    rootClassName?: string;
@@ -42,30 +46,58 @@ export function MindspaceSidebar(props: MindspaceSidebarProps) {
 }
 
 function Header() {
+   const [isCreateProfileDialogOpen, setIsCreateProfileDialogOpen] =
+      useState(false);
+   const { profiles, isLoading, refetch } = useProfiles();
+   const { currentProfile, setCurrentProfileId } = useCurrentProfileContext();
+
+   const handleSubmitCreateProfileDialog = async (profileName: string) => {
+      const newProfile = await createProfile(profileName);
+      refetch();
+      setCurrentProfileId(newProfile.id);
+      setIsCreateProfileDialogOpen(false);
+   };
+   const handleSelectProfile = (profileId: number) => {
+      setCurrentProfileId(profileId);
+   };
    return (
-      <DropdownMenu>
-         <DropdownMenuTrigger>
-            <div className="border-b border-gray-500 flex justify-between items-center hover:bg-accent transition-all p-3 cursor-pointer">
-               <h1 className="font-bold text-sm"> Default profile </h1>
-               <ChevronDown className="w-4 h-4 text-gray-300 stroke-[3px]" />
-            </div>
-         </DropdownMenuTrigger>
-         <DropdownMenuContent className="dropdown-menu-trigger-width">
-            <DropdownMenuItem className="cursor-pointer">
-               <h1 className="font-bold text-sm"> Default profile </h1>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
-               <h1 className="font-bold text-sm"> Default profile </h1>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
-               <h1 className="font-bold text-sm"> Default profile </h1>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
-               <lucidIcon.Plus className="w-4 h-4 text-gray-300 stroke-[3px]" />
-               <h1 className="font-bold text-sm"> Add profile </h1>
-            </DropdownMenuItem>
-         </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="w-full">
+         <DropdownMenu>
+            <DropdownMenuTrigger className="w-full">
+               <div className="border-b border-gray-500 flex justify-between items-center hover:bg-accent transition-all p-3 cursor-pointer">
+                  <h1 className="font-bold text-sm">{currentProfile?.name}</h1>
+                  <ChevronDown className="w-4 h-4 text-gray-300 stroke-[3px]" />
+               </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="dropdown-menu-trigger-width space-y-1">
+               {!isLoading &&
+                  profiles.map((profile) => (
+                     <DropdownMenuItem
+                        key={profile.id}
+                        className={cn(
+                           "cursor-pointer hover:bg-accent transition-all",
+                           currentProfile?.id === profile.id && "bg-accent"
+                        )}
+                        onClick={() => handleSelectProfile(profile.id)}
+                     >
+                        <h1 className="font-bold text-sm">{profile.name}</h1>
+                     </DropdownMenuItem>
+                  ))}
+               <DropdownMenuItem
+                  className="cursor-pointer hover:bg-accent transition-all flex items-center gap-2"
+                  onClick={() => setIsCreateProfileDialogOpen(true)}
+               >
+                  <Plus className="w-4 h-4 text-gray-300" />
+                  <h1 className="font-bold text-sm">Create Profile</h1>
+               </DropdownMenuItem>
+            </DropdownMenuContent>
+         </DropdownMenu>
+         <CreateProfileDialog
+            open={isCreateProfileDialogOpen}
+            onClose={() => setIsCreateProfileDialogOpen(false)}
+            onSubmit={handleSubmitCreateProfileDialog}
+         />
+      </div>
    );
 }
 
@@ -88,7 +120,9 @@ function MindSpaceList() {
       type: "create" as "create" | "edit",
       mindspaceId: null as number | null,
    });
-   const { mindspaces, isLoading, error, refetch } = useMindspaces();
+   const { currentProfileId } = useCurrentProfileContext();
+   const { mindspaces, isLoading, error, refetch } =
+      useMindspaces(currentProfileId);
    const navigate = useNavigate();
    const handleSubmitMindspaceDialog = (
       mindspaceName: string,

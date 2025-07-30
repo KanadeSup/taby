@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { getMindspaces } from "@/api/mindspace";
-import { Mindspace } from "@/lib/db";
+import Mindspace from "@/models/mindspace";
 
-export function useMindspaces() {
+export function useMindspaces(profileId?: number | null) {
    const [mindspaces, setMindspaces] = useState<Mindspace[]>([]);
    const [isLoading, setIsLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
    useEffect(() => {
-      getMindspaces()
+      if (!profileId) return;
+      getMindspaces(profileId)
          .then((mindspaces) => {
             setMindspaces(mindspaces);
             setIsLoading(false);
@@ -17,12 +18,14 @@ export function useMindspaces() {
             setError(error);
             setIsLoading(false);
          });
-   }, []);
+   }, [profileId]);
+
    const refetch = () => {
+      if (!profileId) return;
       if (isLoading) return;
       setIsLoading(true);
       setError(null);
-      getMindspaces()
+      getMindspaces(profileId)
          .then((mindspaces) => {
             setMindspaces(mindspaces);
             setIsLoading(false);

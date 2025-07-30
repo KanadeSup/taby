@@ -8,6 +8,7 @@
     "api",
     "hooks",
     "assets",
+    "models",
     "components",
     "vite.config.base.ts",
     "vite.config.chrome.ts",

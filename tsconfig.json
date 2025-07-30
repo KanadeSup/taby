@@ -35,6 +35,7 @@
     "api",
     "hooks",
     "utils",
+    "models",
     "types",
     "vite.config.base.ts",
     "vite.config.chrome.ts",
