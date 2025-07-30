@@ -14,7 +14,7 @@ export function TabNode(props: NodeProps) {
          <div className="w-full border border-accent rounded-sm bg-black/80 hover:border-blue-400/40">
             <div className="px-3 py-1 border-b border-accent flex items-center gap-1 text-gray-200">
                {favIconUrl && <img src={favIconUrl} className="w-3 h-3 rounded-sm" />}
-               {!favIconUrl && <Globe className="w-3 h-3" />}
+               {!favIconUrl && <Globe className="w-10 h-10" />}
                <h1 className="text-sm font-semibold truncate">{title}</h1>
             </div>
             <div className="flex flex-col gap-1 px-3 py-2">
