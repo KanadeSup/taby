@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 import { createHashHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import "@assets/css/tailwind.css"
+import "@assets/css/shadcn.css"
 
 const hashHistory = createHashHistory()
 const router = createRouter({ routeTree, history: hashHistory });

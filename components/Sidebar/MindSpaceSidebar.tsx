@@ -1,5 +1,5 @@
 import { cn } from "@/lib/shadnc-utils";
-import { Loader2, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { ChevronDown, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { MindspaceDialog } from "../Dialog/MindspaceDialog";
 import { useState } from "react";
 import {
@@ -12,6 +12,12 @@ import { useNavigate } from "@tanstack/react-router";
 import * as lucidIcon from "lucide-react";
 import { MyTextInput } from "../Input/MyTextInput";
 import { MyButton } from "../Button/MyButton";
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuTrigger,
+} from "../shadcn/dropdown-menu";
 
 export type MindspaceSidebarProps = {
    rootClassName?: string;
@@ -37,9 +43,29 @@ export function MindspaceSidebar(props: MindspaceSidebarProps) {
 
 function Header() {
    return (
-      <div className="border-b border-gray-500">
-         <h1 className="text-lg font-bold text-center p-2"> Tabby AI </h1>
-      </div>
+      <DropdownMenu>
+         <DropdownMenuTrigger>
+            <div className="border-b border-gray-500 flex justify-between items-center hover:bg-accent transition-all p-3 cursor-pointer">
+               <h1 className="font-bold text-sm"> Default profile </h1>
+               <ChevronDown className="w-4 h-4 text-gray-300 stroke-[3px]" />
+            </div>
+         </DropdownMenuTrigger>
+         <DropdownMenuContent className="dropdown-menu-trigger-width">
+            <DropdownMenuItem className="cursor-pointer">
+               <h1 className="font-bold text-sm"> Default profile </h1>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+               <h1 className="font-bold text-sm"> Default profile </h1>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+               <h1 className="font-bold text-sm"> Default profile </h1>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+               <lucidIcon.Plus className="w-4 h-4 text-gray-300 stroke-[3px]" />
+               <h1 className="font-bold text-sm"> Add profile </h1>
+            </DropdownMenuItem>
+         </DropdownMenuContent>
+      </DropdownMenu>
    );
 }
 
