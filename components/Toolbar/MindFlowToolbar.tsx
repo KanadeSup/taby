@@ -1,4 +1,4 @@
-import { LayoutGrid, Sidebar } from "lucide-react";
+import { Eye, LayoutGrid, Sidebar } from "lucide-react";
 import { IconButton } from "../Button/IconButton";
 import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
 import { Edge, getConnectedEdges, getOutgoers, Node } from "@xyflow/react";
@@ -78,11 +78,15 @@ export function MindFlowToolbar() {
 
    return (
       <div className="w-full px-4">
-         <div className="bg-gray-600 rounded-md px-2 py-1 flex items-center justify-between">
+         <div className="rounded-md px-2 py-1 flex items-center justify-between">
             {/* Left side */}
-            <div></div>
+            <div className="flex gap-1 border border-gray-500 rounded-md p-1">
+               <IconButton onClick={() => toggleActiveTabSidebar()}>
+                  <Sidebar className="w-4 h-4" />
+               </IconButton>
+            </div>
             {/* Center side */}
-            <div>
+            <div className="flex gap-1 border border-gray-500 rounded-md p-1">
                <IconButton
                   onClick={() => {
                      const rootNode = nodes.find(
@@ -116,7 +120,10 @@ export function MindFlowToolbar() {
                </IconButton>
             </div>
             {/* Right side */}
-            <div>
+            <div className="flex gap-1 border border-gray-500 rounded-md p-1">
+               <IconButton onClick={() => toggleActiveTabSidebar()}>
+                  <Eye className="w-4 h-4" />
+               </IconButton>
                <IconButton onClick={() => toggleActiveTabSidebar()}>
                   <Sidebar className="w-4 h-4" />
                </IconButton>
