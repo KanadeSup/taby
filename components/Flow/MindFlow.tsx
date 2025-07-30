@@ -5,8 +5,6 @@ import {
    applyNodeChanges,
    applyEdgeChanges,
    type Node,
-   type Edge,
-   type FitViewOptions,
    type OnConnect,
    type OnNodesChange,
    type OnEdgesChange,
@@ -37,10 +35,6 @@ const NodeTypes = {
    dragPlaceholder: DragPlaceholderNode,
 };
 const MIN_DISTANCE = 500;
-
-const fitViewOptions: FitViewOptions = {
-   padding: 0.2,
-};
 
 const defaultEdgeOptions: DefaultEdgeOptions = {
    animated: false,
