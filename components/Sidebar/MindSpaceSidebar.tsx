@@ -75,12 +75,17 @@ function Header() {
                      <DropdownMenuItem
                         key={profile.id}
                         className={cn(
-                           "cursor-pointer hover:bg-accent transition-all",
+                           "cursor-pointer hover:bg-accent transition-all flex items-center justify-between",
                            currentProfile?.id === profile.id && "bg-accent"
                         )}
                         onClick={() => handleSelectProfile(profile.id)}
                      >
                         <h1 className="font-bold text-sm">{profile.name}</h1>
+                        {profile.isDefault === 1 && (
+                           <span className="text-[8px] bg-orange-500 rounded-sm px-1 py-0.5 font-bold">
+                              Default
+                           </span>
+                        )}
                      </DropdownMenuItem>
                   ))}
                <DropdownMenuItem
