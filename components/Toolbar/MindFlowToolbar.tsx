@@ -78,7 +78,7 @@ export function MindFlowToolbar() {
 
    return (
       <div className="w-full px-4">
-         <div className="rounded-md px-2 py-1 flex items-center justify-between">
+         <div className="rounded-md py-1 flex items-center justify-between">
             {/* Left side */}
             <div className="flex gap-1 border border-gray-500 rounded-md p-1">
                <IconButton onClick={() => toggleActiveTabSidebar()}>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
+import { PanelTop } from "lucide-react";
 
 export function ActiveTabSidebar() {
    const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
@@ -13,11 +14,12 @@ export function ActiveTabSidebar() {
    }, []);
    return (
       <div className="w-full h-full rounded-md">
-         <div className="bg-gray-700 h-full w-64 rounded-md p-2">
-            <div className="text-white text-sm font-medium text-center">
-               Active tab
+         <div className="h-full w-64 rounded-md border border-gray-700 bg-[#090909]">
+            <div className="text-white px-4 py-3 border-b border-gray-700 flex items-center gap-2">
+               <PanelTop className="w-4 h-4" />
+               <span className="text-sm font-medium">Active tabs</span>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 p-2">
                {tabs.map((tab) => (
                   <div
                      key={tab.id}
