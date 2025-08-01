@@ -28,6 +28,7 @@ import { cn } from "@/lib/shadnc-utils";
 import { DragPlaceholderNode } from "../FlowNode/DragPlaceholderNode";
 import { useShallow } from "zustand/shallow";
 import { CalculateDimension } from "../CalculateDimension/CalculateDimension";
+import { InsertNodeMenu } from "../Menu/InsertNodeMenu";
 
 const NodeTypes = {
    root: RootNode,
@@ -258,11 +259,23 @@ function Flow() {
       </CalculateDimension>
    );
 }
-
+function FlowMenu() {
+   const nodeMenuForInsert = useMindFlowStateStore(
+      (state) => state.nodeMenuForInsert
+   );
+   return (
+      <InsertNodeMenu
+         baseNodeId={nodeMenuForInsert.baseNodeId}
+         top={nodeMenuForInsert.top}
+         left={nodeMenuForInsert.left}
+      />
+   );
+}
 export function MindFlow() {
    return (
       <MindFlowLayoutProvider>
          <Flow />
+         <FlowMenu />
       </MindFlowLayoutProvider>
    );
 }

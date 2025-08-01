@@ -1,19 +1,24 @@
 import { createStore, StoreApi, useStore } from "zustand";
 import { Edge, Node, ReactFlowProvider } from "@xyflow/react";
 import { createContext, useContext, useState } from "react";
-import { DragActiveTab } from "@/types/MindFlow";
+import { DragActiveTab, NodeMenuForInsert } from "@/types/MindFlow";
 
 type MindFlowStateStore = {
    isActiveTabSidebarOpen: boolean;
    dragActiveTab: null | DragActiveTab;
    nodes: Node[];
    edges: Edge[];
+   selectedNode?: null | Node;
+   nodeMenuForInsert: NodeMenuForInsert;
    action: {
       toggleActiveTabSidebar: (state?: boolean) => void;
       setDragActiveTab: (tab: DragActiveTab) => void;
       clearDragActiveTab: () => void;
       setNodes: (nodes: Node[] | ((nodes: Node[]) => Node[])) => void;
       setEdges: (edges: Edge[] | ((edges: Edge[]) => Edge[])) => void;
+      setSelectedNode: (node: null | Node) => void;
+      openNodeMenuForInsert: (nodeMenuForInsert: NodeMenuForInsert) => void;
+      closeNodeMenuForInsert: () => void;
    };
 };
 
@@ -23,17 +28,25 @@ const createMindFlowStateStore = (
    return createStore<MindFlowStateStore>((set, get) => ({
       isActiveTabSidebarOpen: false,
       dragActiveTab: null,
-      nodes: [{
-         id: "root-node",
-         type: "root",
-         data: {
-            title: "Root Node",
+      nodes: [
+         {
+            id: "root-node",
+            type: "root",
+            data: {
+               title: "Root Node",
+            },
+            position: { x: 0, y: 0 },
+            draggable: false,
+            className: "connectable-node",
          },
-         position: { x: 0, y: 0 },
-         draggable: false,
-         className: "connectable-node",
-      }],
+      ],
       edges: [],
+      selectedNode: null,
+      nodeMenuForInsert: {
+         baseNodeId: null,
+         top: 0,
+         left: 0,
+      },
       ...initialState,
       action: {
          toggleActiveTabSidebar: (state?: boolean) => {
@@ -55,6 +68,21 @@ const createMindFlowStateStore = (
          setEdges: (edges: Edge[] | ((edges: Edge[]) => Edge[])) => {
             set({
                edges: typeof edges === "function" ? edges(get().edges) : edges,
+            });
+         },
+         setSelectedNode: (node: null | Node) => {
+            set({ selectedNode: node });
+         },
+         openNodeMenuForInsert: (nodeMenuForInsert: NodeMenuForInsert) => {
+            set({ nodeMenuForInsert });
+         },
+         closeNodeMenuForInsert: () => {
+            set({
+               nodeMenuForInsert: {
+                  baseNodeId: null,
+                  top: 0,
+                  left: 0,
+               },
             });
          },
       },

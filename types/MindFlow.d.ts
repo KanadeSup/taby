@@ -3,3 +3,9 @@ export type DragActiveTab = {
    url: string;
    favIconUrl?: string;
 };
+
+export type NodeMenuForInsert = {
+   baseNodeId: string | null;
+   top: number;
+   left: number;
+};
