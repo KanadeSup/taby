@@ -1,4 +1,3 @@
-import { TAB_NODE_DIMENSION } from "@/lib/constants/mindflow-constant";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Globe } from "lucide-react";
 
@@ -13,8 +12,8 @@ export function TabNode(props: NodeProps) {
       <div
          className="flex"
          style={{
-            width: TAB_NODE_DIMENSION.width,
-            height: TAB_NODE_DIMENSION.height,
+            width: 180,
+            height: 80,
          }}
       >
          <Handle id="left" type="target" position={Position.Left} />

@@ -4,7 +4,6 @@ import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
 import { Edge, getConnectedEdges, getOutgoers, Node } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
 import { useShallow } from "zustand/shallow";
-import { TAB_NODE_DIMENSION } from "@/lib/constants/mindflow-constant";
 
 function getLayoutedElements(
    nodes: Node[],
@@ -16,9 +15,15 @@ function getLayoutedElements(
    );
    dagreGraph.setGraph({ rankdir: direction, nodesep: 10, ranksep: 50 });
    nodes.forEach((node) => {
+      if (!node.measured || !node.measured.width || !node.measured.height) {
+         console.error(
+            "Cannot get node width or height to calculate position for auto layout"
+         );
+         return;
+      }
       dagreGraph.setNode(node.id, {
-         width: TAB_NODE_DIMENSION.width,
-         height: TAB_NODE_DIMENSION.height,
+         width: node.measured.width,
+         height: node.measured.height,
       });
    });
    edges.forEach((edge) => {
@@ -26,10 +31,16 @@ function getLayoutedElements(
    });
    dagre.layout(dagreGraph);
    const layoutedNodes = nodes.map((node) => {
+      if (!node.measured || !node.measured.width || !node.measured.height) {
+         console.error(
+            "Cannot get node width or height to calculate position for auto layout"
+         );
+         return node;
+      }
       const dargeNodePosition = dagreGraph.node(node.id);
       const flowNodePosition = {
-         x: dargeNodePosition.x - TAB_NODE_DIMENSION.width / 2,
-         y: dargeNodePosition.y - TAB_NODE_DIMENSION.height / 2,
+         x: dargeNodePosition.x - node.measured.width / 2,
+         y: dargeNodePosition.y - node.measured.height / 2,
       };
       return {
          ...node,
