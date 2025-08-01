@@ -28,6 +28,7 @@ export function CreateCategoryNode(props: NodeProps) {
             name: resolvedTitle,
             baseNodeSide,
          },
+         className: "connectable-node",
       };
       updateNodeById(props.id, categoryNode);
       setEdges((eds) =>
@@ -36,7 +37,6 @@ export function CreateCategoryNode(props: NodeProps) {
                return {
                   ...edge,
                   animated: false,
-                  className: "connectable-node",
                   style: { strokeDasharray: "0 0", stroke: "white" },
                };
             }
