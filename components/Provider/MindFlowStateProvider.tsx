@@ -50,6 +50,7 @@ const createMindFlowStateStore = (
       selectedNode: null,
       nodeMenuForInsert: {
          baseNodeId: null,
+         baseNodeSide: "left",
          top: 0,
          left: 0,
       },
@@ -86,6 +87,7 @@ const createMindFlowStateStore = (
             set({
                nodeMenuForInsert: {
                   baseNodeId: null,
+                  baseNodeSide: "left",
                   top: 0,
                   left: 0,
                },

@@ -6,6 +6,7 @@ export type DragActiveTab = {
 
 export type NodeMenuForInsert = {
    baseNodeId: string | null;
+   baseNodeSide: "left" | "right";
    top: number;
    left: number;
 };

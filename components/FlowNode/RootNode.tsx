@@ -10,13 +10,15 @@ export function RootNode(props: NodeProps) {
    );
 
    const handleOpenNodeMenuForInsert = (
-      e: React.MouseEvent<HTMLDivElement>
+      e: React.MouseEvent<HTMLDivElement>,
+      baseNodeSide: "left" | "right"
    ) => {
       e.stopPropagation();
       e.preventDefault();
       const { top, left } = e.currentTarget.getBoundingClientRect();
       openNodeMenuForInsert({
          baseNodeId: props.id,
+         baseNodeSide,
          top: top - 12,
          left: left + 20,
       });
@@ -39,7 +41,7 @@ export function RootNode(props: NodeProps) {
                "hidden absolute right-[-25px] rounded-full bg-green-500 hover:bg-green-600 p-0.5 cursor-pointer",
                selected && "block"
             )}
-            onClick={handleOpenNodeMenuForInsert}
+            onClick={(e) => handleOpenNodeMenuForInsert(e, "left")}
          >
             <Plus className="w-3 h-3" />
          </div>
@@ -51,7 +53,7 @@ export function RootNode(props: NodeProps) {
                "hidden absolute left-[-25px] rounded-full bg-green-500 hover:bg-green-600 p-0.5 cursor-pointer",
                selected && "block"
             )}
-            onClick={handleOpenNodeMenuForInsert}
+            onClick={(e) => handleOpenNodeMenuForInsert(e, "right")}
          >
             <Plus className="w-3 h-3" />
          </div>

@@ -6,15 +6,12 @@ import {
    SquareLibrary,
 } from "lucide-react";
 import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
-import { Edge, Node } from "@xyflow/react";
+import { Node } from "@xyflow/react";
+import { NodeMenuForInsert } from "@/types/MindFlow";
 
-export type InsertNodeMenuProps = {
-   baseNodeId: string | null;
-   top: number;
-   left: number;
-};
+export type InsertNodeMenuProps = NodeMenuForInsert;
 export function InsertNodeMenu(props: InsertNodeMenuProps) {
-   const { baseNodeId, top, left } = props;
+   const { baseNodeId, top, left, baseNodeSide } = props;
    const { closeNodeMenuForInsert, addNode, addEdge } = useMindFlowStateStore(
       (state) => state.action
    );
@@ -49,6 +46,7 @@ export function InsertNodeMenu(props: InsertNodeMenuProps) {
          position: { x: 150, y: 150 },
          data: {
             name: "New category",
+            baseNodeSide,
          },
       };
       addNode(categoryNode);
@@ -56,8 +54,8 @@ export function InsertNodeMenu(props: InsertNodeMenuProps) {
          id: `edge-${Date.now()}`,
          source: baseNodeId,
          target: categoryNode.id,
-         sourceHandle: "right",
-         targetHandle: "left",
+         sourceHandle: baseNodeSide === "left" ? "right" : "left",
+         targetHandle: baseNodeSide === "left" ? "left" : "right",
          className: "category-edge-tmp",
          style: {
             strokeDasharray: "5 5",

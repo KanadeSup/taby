@@ -1,12 +1,12 @@
 import { Handle, NodeProps, Position } from "@xyflow/react";
 
 export function CategoryNode(props: NodeProps) {
-   const { name } = props.data as { name: string };
+   const { name, baseNodeSide } = props.data as { name: string; baseNodeSide: "left" | "right" };
    return (
       <div className="flex items-center gap-2">
          <Handle
             id="left"
-            type="target"
+            type={baseNodeSide === "left" ? "target" : "source"}
             position={Position.Left}
             className="invisible"
          />
@@ -17,7 +17,7 @@ export function CategoryNode(props: NodeProps) {
          </div>
          <Handle
             id="right"
-            type="target"
+            type={baseNodeSide === "left" ? "source" : "target"}
             position={Position.Right}
             className="invisible"
          />
