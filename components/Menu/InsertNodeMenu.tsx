@@ -6,6 +6,7 @@ import {
    SquareLibrary,
 } from "lucide-react";
 import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
+import { Edge, Node } from "@xyflow/react";
 
 export type InsertNodeMenuProps = {
    baseNodeId: string | null;
@@ -14,14 +15,16 @@ export type InsertNodeMenuProps = {
 };
 export function InsertNodeMenu(props: InsertNodeMenuProps) {
    const { baseNodeId, top, left } = props;
-   const { closeNodeMenuForInsert } = useMindFlowStateStore(
+   const { closeNodeMenuForInsert, addNode, addEdge } = useMindFlowStateStore(
       (state) => state.action
    );
    const menuItems = [
       {
          title: "Add category",
          icon: SquareLibrary,
-         onClick: () => {},
+         onClick: () => {
+            handleAddCategory();
+         },
       },
       {
          title: "Add note",
@@ -39,8 +42,32 @@ export function InsertNodeMenu(props: InsertNodeMenuProps) {
       closeNodeMenuForInsert();
    };
    const handleAddCategory = () => {
-
-   }
+      if (!baseNodeId) return;
+      const categoryNode: Node = {
+         id: `category-${Date.now()}`,
+         type: "createCategory",
+         position: { x: 150, y: 150 },
+         data: {
+            name: "New category",
+         },
+      };
+      addNode(categoryNode);
+      addEdge({
+         id: `edge-${Date.now()}`,
+         source: baseNodeId,
+         target: categoryNode.id,
+         sourceHandle: "right",
+         targetHandle: "left",
+         className: "category-edge-tmp",
+         style: {
+            strokeDasharray: "5 5",
+            stroke: "white",
+            strokeWidth: 1,
+         },
+         animated: true,
+      });
+      handleCloseMenu();
+   };
 
    if (!baseNodeId) return null;
    return (

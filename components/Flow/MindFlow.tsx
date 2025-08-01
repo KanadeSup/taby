@@ -29,11 +29,15 @@ import { DragPlaceholderNode } from "../FlowNode/DragPlaceholderNode";
 import { useShallow } from "zustand/shallow";
 import { CalculateDimension } from "../CalculateDimension/CalculateDimension";
 import { InsertNodeMenu } from "../Menu/InsertNodeMenu";
+import { CreateCategoryNode } from "../FlowNode/CreateCateogryNode";
+import { CategoryNode } from "../FlowNode/CategoryNode";
 
 const NodeTypes = {
    root: RootNode,
    tab: TabNode,
    dragPlaceholder: DragPlaceholderNode,
+   createCategory: CreateCategoryNode,
+   category: CategoryNode,
 };
 const MIN_DISTANCE = 500;
 

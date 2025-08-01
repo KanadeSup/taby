@@ -15,7 +15,6 @@ export function RootNode(props: NodeProps) {
       e.stopPropagation();
       e.preventDefault();
       const { top, left } = e.currentTarget.getBoundingClientRect();
-      console.log(top, left);
       openNodeMenuForInsert({
          baseNodeId: props.id,
          top: top - 12,

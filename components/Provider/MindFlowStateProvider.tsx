@@ -19,6 +19,12 @@ type MindFlowStateStore = {
       setSelectedNode: (node: null | Node) => void;
       openNodeMenuForInsert: (nodeMenuForInsert: NodeMenuForInsert) => void;
       closeNodeMenuForInsert: () => void;
+      addNode: (node: Node) => void;
+      addEdge: (edge: Edge) => void;
+      removeNodeById: (id: string) => void;
+      removeEdgeById: (id: string) => void;
+      updateNodeById: (id: string, updateData: Partial<Node>) => void;
+      updateEdgeById: (id: string, updateData: Partial<Edge>) => void;
    };
 };
 
@@ -83,6 +89,36 @@ const createMindFlowStateStore = (
                   top: 0,
                   left: 0,
                },
+            });
+         },
+         addNode: (node: Node) => {
+            set({ nodes: [...get().nodes, node] });
+         },
+         addEdge: (edge: Edge) => {
+            set({ edges: [...get().edges, edge] });
+         },
+         removeNodeById: (id: string) => {
+            set({
+               nodes: get().nodes.filter((node) => node.id !== id),
+            });
+         },
+         removeEdgeById: (id: string) => {
+            set({
+               edges: get().edges.filter((edge) => edge.id !== id),
+            });
+         },
+         updateNodeById: (id: string, updateData: Partial<Node>) => {
+            set({
+               nodes: get().nodes.map((node) =>
+                  node.id === id ? { ...node, ...updateData } : node
+               ),
+            });
+         },
+         updateEdgeById: (id: string, updateData: Partial<Edge>) => {
+            set({
+               edges: get().edges.map((edge) =>
+                  edge.id === id ? { ...edge, ...updateData } : edge
+               ),
             });
          },
       },
