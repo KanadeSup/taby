@@ -270,6 +270,7 @@ function FlowMenu() {
    return (
       <InsertNodeMenu
          baseNodeId={nodeMenuForInsert.baseNodeId}
+         baseNodeSide={nodeMenuForInsert.baseNodeSide}
          top={nodeMenuForInsert.top}
          left={nodeMenuForInsert.left}
       />

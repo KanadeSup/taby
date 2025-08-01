@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
 
 export function CreateCategoryNode(props: NodeProps) {
+   const { baseNodeSide } = props.data as { baseNodeSide: "left" | "right" };
    const inputRef = useRef<HTMLInputElement>(null);
    const [title, setTitle] = useState("");
    const { removeNodeById, updateNodeById, setEdges } = useMindFlowStateStore(
@@ -25,6 +26,7 @@ export function CreateCategoryNode(props: NodeProps) {
          type: "category",
          data: {
             name: resolvedTitle,
+            baseNodeSide,
          },
       };
       updateNodeById(props.id, categoryNode);
