@@ -4,6 +4,7 @@ import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
 import { Edge, getConnectedEdges, getOutgoers, Node } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
 import { useShallow } from "zustand/shallow";
+import { TAB_NODE_DIMENSION } from "@/lib/constants/mindflow-constant";
 
 function getLayoutedElements(
    nodes: Node[],
@@ -15,7 +16,10 @@ function getLayoutedElements(
    );
    dagreGraph.setGraph({ rankdir: direction, nodesep: 10, ranksep: 50 });
    nodes.forEach((node) => {
-      dagreGraph.setNode(node.id, { width: 176, height: 80 });
+      dagreGraph.setNode(node.id, {
+         width: TAB_NODE_DIMENSION.width,
+         height: TAB_NODE_DIMENSION.height,
+      });
    });
    edges.forEach((edge) => {
       dagreGraph.setEdge(edge.source, edge.target);
@@ -24,8 +28,8 @@ function getLayoutedElements(
    const layoutedNodes = nodes.map((node) => {
       const dargeNodePosition = dagreGraph.node(node.id);
       const flowNodePosition = {
-         x: dargeNodePosition.x - 176 / 2,
-         y: dargeNodePosition.y - 80 / 2,
+         x: dargeNodePosition.x - TAB_NODE_DIMENSION.width / 2,
+         y: dargeNodePosition.y - TAB_NODE_DIMENSION.height / 2,
       };
       return {
          ...node,

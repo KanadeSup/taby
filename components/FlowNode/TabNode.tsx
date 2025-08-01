@@ -1,3 +1,4 @@
+import { TAB_NODE_DIMENSION } from "@/lib/constants/mindflow-constant";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Globe } from "lucide-react";
 
@@ -9,11 +10,19 @@ export function TabNode(props: NodeProps) {
       favIconUrl: string;
    };
    return (
-      <div className="flex w-44 h-20">
+      <div
+         className="flex"
+         style={{
+            width: TAB_NODE_DIMENSION.width,
+            height: TAB_NODE_DIMENSION.height,
+         }}
+      >
          <Handle id="left" type="target" position={Position.Left} />
          <div className="w-full border border-accent rounded-sm bg-black/80 hover:border-blue-400/40">
             <div className="px-3 py-1 border-b border-accent flex items-center gap-1 text-gray-200">
-               {favIconUrl && <img src={favIconUrl} className="w-3 h-3 rounded-sm" />}
+               {favIconUrl && (
+                  <img src={favIconUrl} className="w-3 h-3 rounded-sm" />
+               )}
                {!favIconUrl && <Globe className="w-10 h-10" />}
                <h1 className="text-sm font-semibold truncate">{title}</h1>
             </div>
