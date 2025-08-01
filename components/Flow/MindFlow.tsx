@@ -39,7 +39,6 @@ const NodeTypes = {
    createCategory: CreateCategoryNode,
    category: CategoryNode,
 };
-const MIN_DISTANCE = 500;
 
 const defaultEdgeOptions: DefaultEdgeOptions = {
    animated: false,
@@ -85,17 +84,32 @@ function Flow() {
          (closest, node) => {
             if (node.id === internalNode.id) return closest;
             if (node.className !== "connectable-node") return closest;
+
             const dx =
                node.internals.positionAbsolute.x -
                internalNode.internals.positionAbsolute.x;
-            const dy =
-               node.internals.positionAbsolute.y -
-               internalNode.internals.positionAbsolute.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < closest.distance && distance < MIN_DISTANCE) {
-               closest.distance = distance;
-               closest.node = node;
+            const distance = Math.abs(dx);
+
+            if (distance >= closest.distance) return closest;
+
+            const isNearRightHandleOfBaseNode =
+               node.internals.positionAbsolute.x <
+               internalNode.internals.positionAbsolute.x;
+
+            if ("baseNodeSide" in node.data) {
+               const baseNodeSide = node.data.baseNodeSide;
+               const isInvalid =
+                  (baseNodeSide === "right" && isNearRightHandleOfBaseNode) ||
+                  (baseNodeSide === "left" && !isNearRightHandleOfBaseNode);
+
+               if (isInvalid) {
+                  return closest;
+               }
             }
+            
+            closest.distance = distance;
+            closest.node = node;
+
             return closest;
          },
          { distance: Infinity, node: null }
