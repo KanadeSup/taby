@@ -14,12 +14,14 @@ import {
    useReactFlow,
    useStoreApi,
    InternalNode,
+   useOnSelectionChange,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { RootNode } from "../FlowNode/RootNode";
 import { TabNode } from "../FlowNode/TabNode";
 import { MindFlowToolbar } from "../Toolbar/MindFlowToolbar";
 import { ActiveTabSidebar } from "../Sidebar/ActiveTabSidebar";
+import { EditNodeSidebar } from "../Sidebar/EditNodeSidebar";
 import {
    MindFlowLayoutProvider,
    useMindFlowStateStore,
@@ -46,16 +48,17 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
 
 function Flow() {
    const store = useStoreApi();
-   const { isActiveTabSidebarOpen, dragActiveTab, nodes, edges } =
+   const { isActiveTabSidebarOpen, dragActiveTab, nodes, edges, selectedNode } =
       useMindFlowStateStore(
          useShallow((state) => ({
             isActiveTabSidebarOpen: state.isActiveTabSidebarOpen,
             dragActiveTab: state.dragActiveTab,
             nodes: state.nodes,
             edges: state.edges,
+            selectedNode: state.selectedNode,
          }))
       );
-   const { setNodes, setEdges } = useMindFlowStateStore(
+   const { setNodes, setEdges, setSelectedNode } = useMindFlowStateStore(
       (state) => state.action
    );
    const { getInternalNode } = useReactFlow();
@@ -72,6 +75,17 @@ function Flow() {
       (connection) => setEdges((eds) => addEdge(connection, eds)),
       [setEdges]
    );
+
+   useOnSelectionChange({
+      onChange: ({ nodes }) => {
+         if (nodes.length === 0 || nodes.length > 1) {
+            setSelectedNode(null);
+            return;
+         }
+         const node = nodes[0];
+         setSelectedNode(node);
+      },
+   });
 
    const getClosestEdge = useCallback((nodeId: string) => {
       const { nodeLookup } = store.getState();
@@ -106,7 +120,7 @@ function Flow() {
                   return closest;
                }
             }
-            
+
             closest.distance = distance;
             closest.node = node;
 
@@ -270,6 +284,15 @@ function Flow() {
                      )}
                   >
                      <ActiveTabSidebar />
+                  </Panel>
+                  <Panel
+                     position="center-right"
+                     className={cn(
+                        "h-[92%] transition-transform duration-300 translate-y-[30px]",
+                        selectedNode ? "translate-x-0" : "translate-x-[110%]"
+                     )}
+                  >
+                     <EditNodeSidebar />
                   </Panel>
                </ReactFlow>
             );

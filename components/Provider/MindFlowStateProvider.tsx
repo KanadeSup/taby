@@ -57,9 +57,28 @@ const createMindFlowStateStore = (
       ...initialState,
       action: {
          toggleActiveTabSidebar: (state?: boolean) => {
+            const isOpen = state ?? !get().isActiveTabSidebarOpen;
             set({
-               isActiveTabSidebarOpen: state ?? !get().isActiveTabSidebarOpen,
+               isActiveTabSidebarOpen: isOpen,
             });
+
+            if (!isOpen) return;
+
+            const { selectedNode } = get();
+            const { setNodes, setSelectedNode } = get().action;
+            if (selectedNode) {
+               // deselect all nodes
+               setNodes(
+                  get().nodes.map((node) => {
+                     return {
+                        ...node,
+                        selected: false,
+                     };
+                  })
+               );
+
+               setSelectedNode(null);
+            }
          },
          setDragActiveTab: (tab: DragActiveTab) => {
             set({ dragActiveTab: tab });
@@ -79,6 +98,10 @@ const createMindFlowStateStore = (
          },
          setSelectedNode: (node: null | Node) => {
             set({ selectedNode: node });
+            const { toggleActiveTabSidebar } = get().action;
+            if (node) {
+               toggleActiveTabSidebar(false);
+            }
          },
          openNodeMenuForInsert: (nodeMenuForInsert: NodeMenuForInsert) => {
             set({ nodeMenuForInsert });
