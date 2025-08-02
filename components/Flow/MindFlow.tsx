@@ -271,13 +271,13 @@ function Flow() {
                      zoom: 1,
                   }}
                >
-                  <Panel position="top-center" className="w-full">
+                  <Panel position="top-center" className="w-full z-10!">
                      <MindFlowToolbar />
                   </Panel>
                   <Panel
                      position="center-right"
                      className={cn(
-                        "h-[92%] transition-transform duration-300 translate-y-[30px]",
+                        "h-full transition-transform duration-300 pt-[70px] pb-[10px]",
                         isActiveTabSidebarOpen
                            ? "translate-x-0"
                            : "translate-x-[110%]"
@@ -288,7 +288,7 @@ function Flow() {
                   <Panel
                      position="center-right"
                      className={cn(
-                        "h-[92%] transition-transform duration-300 translate-y-[30px]",
+                        "h-full transition-transform duration-300 pt-[70px] pb-[10px]",
                         selectedNode ? "translate-x-0" : "translate-x-[110%]"
                      )}
                   >
