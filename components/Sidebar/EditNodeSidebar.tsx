@@ -97,7 +97,15 @@ function GeneralStyleSection() {
             <h1>Shape</h1>
             <ShapeSection />
          </CollapseTrigger>
-         <CollapseContent>fill</CollapseContent>
+         <CollapseContent className="p-2">
+            <div className="flex justify-between items-center">
+               <p className="text-sm font-semibold">Fill</p>
+               <div className="flex items-center gap-2">
+                  <FillStyleSection />
+                  <FillColorSection />
+               </div>
+            </div>
+         </CollapseContent>
       </Collapse>
    );
 }
@@ -130,7 +138,10 @@ function ShapeSection() {
                <ChevronDown className="w-4 h-4" />
             </div>
          </DropdownMenuTrigger>
-         <DropdownMenuContent className="w-64 grid grid-cols-3 gap-2" align="end">
+         <DropdownMenuContent
+            className="w-64 grid grid-cols-3 gap-2"
+            align="end"
+         >
             {shapes.map((shape) => (
                <DropdownMenuItem
                   key={shape.name}
@@ -143,6 +154,64 @@ function ShapeSection() {
                   <shape.icon className="w-full! h-full! stroke-gray-200" />
                </DropdownMenuItem>
             ))}
+         </DropdownMenuContent>
+      </DropdownMenu>
+   );
+}
+
+function FillStyleSection() {
+   const shapes = [
+      { name: "rectangle", icon: RectangleHorizontal },
+      { name: "circle", icon: Circle },
+      { name: "triangle", icon: Triangle },
+      { name: "octagon", icon: Octagon },
+   ];
+   const [selectedShape, setSelectedShape] = useState<Shape>(shapes[0]);
+   return (
+      <DropdownMenu>
+         <DropdownMenuTrigger onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md border border-accent hover:bg-accent">
+               <selectedShape.icon className="w-4 h-4" />
+               <ChevronDown className="w-4 h-4" />
+            </div>
+         </DropdownMenuTrigger>
+         <DropdownMenuContent
+            className="w-64 grid grid-cols-3 gap-2"
+         >
+            {shapes.map((shape) => (
+               <DropdownMenuItem
+                  key={shape.name}
+                  className="cursor-pointer w-full h-14 p-3"
+                  onClick={(e) => {
+                     e.stopPropagation();
+                     setSelectedShape(shape);
+                  }}
+               >
+                  <shape.icon className="w-full! h-full! stroke-gray-200" />
+               </DropdownMenuItem>
+            ))}
+         </DropdownMenuContent>
+      </DropdownMenu>
+   );
+}
+
+function FillColorSection() {
+   const [selectedColor, setSelectedColor] = useState<string>("red");
+   return (
+      <DropdownMenu>
+         <DropdownMenuTrigger
+            onClick={(e) => e.stopPropagation()}
+            className="w-11 h-7 rounded-sm cursor-pointer border border-gray-300"
+            style={{
+               backgroundColor: selectedColor,
+            }}
+         >
+         </DropdownMenuTrigger>
+         <DropdownMenuContent
+            className="w-64 grid grid-cols-3 gap-2"
+            align="end"
+         >
+            color picker
          </DropdownMenuContent>
       </DropdownMenu>
    );
