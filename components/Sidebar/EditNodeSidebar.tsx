@@ -94,6 +94,23 @@ function SectionSelectorHeader({
 
 function GeneralStyleSection() {
    return (
+      <div className="space-y-1">
+         <ShapeControl />
+         <BorderControl />
+      </div>
+   );
+}
+
+function EdgeStyleSection() {
+   return <div>EdgeStyleSection</div>;
+}
+
+function ColorSchemeSection() {
+   return <div>ColorSchemeSection</div>;
+}
+
+function ShapeControl() {
+   return (
       <Collapse>
          <CollapseTrigger className="flex items-center justify-between">
             <h1 className="text-sm font-semibold">Shape</h1>
@@ -120,12 +137,143 @@ function GeneralStyleSection() {
    );
 }
 
-function EdgeStyleSection() {
-   return <div>EdgeStyleSection</div>;
+function BorderControl() {
+   return (
+      <Collapse>
+         <CollapseTrigger className="flex items-center justify-between">
+            <h1 className="text-sm font-semibold">Border</h1>
+            <BorderStyleSelector />
+         </CollapseTrigger>
+         <CollapseContent className="p-2 space-y-2">
+            <div className="flex justify-between items-center">
+               <p className="text-xs font-semibold">Fill</p>
+               <div className="flex items-center gap-2">
+                  <BorderThicknessControl />
+                  <FillColorSection />
+               </div>
+            </div>
+         </CollapseContent>
+      </Collapse>
+   );
 }
 
-function ColorSchemeSection() {
-   return <div>ColorSchemeSection</div>;
+type BorderStyle = "solid" | "dashed" | "dotted" | "none";
+function BorderStyleSelector() {
+   const [selectedBorderStyle, setSelectedBorderStyle] =
+      useState<BorderStyle>("solid");
+   const borderStyles: BorderStyle[] = ["solid", "dashed", "dotted", "none"];
+   return (
+      <DropdownMenu>
+         <DropdownMenuTrigger
+            onClick={(e) => e.stopPropagation()}
+            className="w-20"
+         >
+            <div className="flex items-center justify-between gap-2 cursor-pointer p-2 rounded-md border border-accent hover:bg-accent">
+               {selectedBorderStyle === "none" ? (
+                  <p className="text-xs font-semibold text-center">None</p>
+               ) : (
+                  <BorderStyleIcon style={selectedBorderStyle} />
+               )}
+               <ChevronDown className="w-4 h-4" />
+            </div>
+         </DropdownMenuTrigger>
+         <DropdownMenuContent className="w-40 flex flex-col gap-1" align="end">
+            {borderStyles
+               .filter((style) => style !== "none")
+               .map((style) => (
+                  <DropdownMenuItem
+                     key={style}
+                     className={cn(
+                        "py-5 px-5 cursor-pointer hover:bg-accent",
+                        selectedBorderStyle === style && "bg-accent"
+                     )}
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedBorderStyle(style);
+                     }}
+                  >
+                     <BorderStyleIcon style={style} />
+                  </DropdownMenuItem>
+               ))}
+            <DropdownMenuItem
+               className={cn(
+                  "py-2 px-5 cursor-pointer hover:bg-accent flex items-center justify-center",
+                  selectedBorderStyle === "none" && "bg-accent"
+               )}
+               onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedBorderStyle("none");
+               }}
+            >
+               <p className="text-xs font-semibold text-center">No border</p>
+            </DropdownMenuItem>
+         </DropdownMenuContent>
+      </DropdownMenu>
+   );
+}
+
+type BorderStyleProps = {
+   style: "solid" | "dashed" | "dotted";
+};
+function BorderStyleIcon({ style }: BorderStyleProps) {
+   return (
+      <div
+         className="w-full h-[1px] stroke-gray-200 border border-white"
+         style={{
+            borderStyle: style,
+         }}
+      />
+   );
+}
+
+type BorderThickness =
+   | "Extra thin"
+   | "Thin"
+   | "Normal"
+   | "Thick"
+   | "Extra thick";
+function BorderThicknessControl() {
+   const [selectedBorderThickness, setSelectedBorderThickness] =
+      useState<BorderThickness>("Normal");
+   const borderThicknesses: BorderThickness[] = [
+      "Extra thin",
+      "Thin",
+      "Normal",
+      "Thick",
+      "Extra thick",
+   ];
+   return (
+      <DropdownMenu>
+         <DropdownMenuTrigger onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md border border-accent hover:bg-accent">
+               <p className="text-xs font-semibold">
+                  {selectedBorderThickness}
+               </p>
+               <ChevronDown className="w-4 h-4 text-gray-200" />
+            </div>
+         </DropdownMenuTrigger>
+         <DropdownMenuContent
+            className="w-40 flex flex-col gap-1"
+            align="center"
+         >
+            {borderThicknesses.map((thickness) => (
+               <DropdownMenuItem
+                  key={thickness}
+                  className={cn(
+                     "py-2 px-3 cursor-pointer hover:bg-accent",
+                     selectedBorderThickness === thickness && "bg-accent"
+                  )}
+                  onClick={(e) => {
+                     e.stopPropagation();
+                     setSelectedBorderThickness(thickness);
+                  }}
+               >
+                  {thickness}
+               </DropdownMenuItem>
+            ))}
+         </DropdownMenuContent>
+      </DropdownMenu>
+   );
 }
 
 type Shape = {
