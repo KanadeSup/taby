@@ -37,6 +37,20 @@ export function MindspaceDialog(props: MindspaceDialogProps) {
    });
    const isEditMode = type === "edit" && mindspaceId !== undefined;
 
+   // Reset the input values and validation when the dialog is opened
+   useEffect(() => {
+      if (open) {
+         setInputValues({
+            mindspaceName: "",
+            mindspaceDescription: "",
+            mindspaceIcon: "",
+         });
+         setInputsValidiation({
+            mindspaceName: false,
+         });
+      }
+   }, [open]);
+
    useEffect(() => {
       const fetchMindspace = async () => {
          if (isEditMode) {
