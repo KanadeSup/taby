@@ -22,6 +22,8 @@ import {
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from "../shadcn/dropdown-menu";
+import { MyTextInput } from "../Input/MyTextInput";
+import { MyButton } from "../Button/MyButton";
 
 export function EditNodeSidebar() {
    const [selectedSection, setSelectedSection] = useState<string | null>(
@@ -94,16 +96,24 @@ function GeneralStyleSection() {
    return (
       <Collapse>
          <CollapseTrigger className="flex items-center justify-between">
-            <h1>Shape</h1>
-            <ShapeSection />
+            <h1 className="text-sm font-semibold">Shape</h1>
+            <ShapeSelector />
          </CollapseTrigger>
-         <CollapseContent className="p-2">
+         <CollapseContent className="p-2 space-y-2">
             <div className="flex justify-between items-center">
-               <p className="text-sm font-semibold">Fill</p>
+               <p className="text-xs font-semibold">Fill</p>
                <div className="flex items-center gap-2">
                   <FillStyleSection />
                   <FillColorSection />
                </div>
+            </div>
+            <div className="flex justify-between items-center">
+               <p className="text-xs font-semibold">Width</p>
+               <NodeWidthControl />
+            </div>
+            <div className="flex justify-between items-center">
+               <p className="text-xs font-semibold">Height</p>
+               <NodeHeightControl />
             </div>
          </CollapseContent>
       </Collapse>
@@ -122,7 +132,7 @@ type Shape = {
    name: string;
    icon: React.ElementType;
 };
-function ShapeSection() {
+function ShapeSelector() {
    const shapes = [
       { name: "rectangle", icon: RectangleHorizontal },
       { name: "circle", icon: Circle },
@@ -175,9 +185,7 @@ function FillStyleSection() {
                <ChevronDown className="w-4 h-4" />
             </div>
          </DropdownMenuTrigger>
-         <DropdownMenuContent
-            className="w-64 grid grid-cols-3 gap-2"
-         >
+         <DropdownMenuContent className="w-64 grid grid-cols-3 gap-2">
             {shapes.map((shape) => (
                <DropdownMenuItem
                   key={shape.name}
@@ -205,8 +213,7 @@ function FillColorSection() {
             style={{
                backgroundColor: selectedColor,
             }}
-         >
-         </DropdownMenuTrigger>
+         />
          <DropdownMenuContent
             className="w-64 grid grid-cols-3 gap-2"
             align="end"
@@ -214,5 +221,39 @@ function FillColorSection() {
             color picker
          </DropdownMenuContent>
       </DropdownMenu>
+   );
+}
+
+function NodeHeightControl() {
+   return (
+      <div className="flex items-center gap-2">
+         <MyTextInput
+            placeholder="Height"
+            className="w-14 text-[12px]! p-1 px-2 h-auto rounded-sm"
+         />
+         <MyButton
+            size="sm"
+            className="rounded-sm text-gray-200 text-[12px]! h-auto py-1 px-4 bg-accent hover:bg-accent/80"
+         >
+            Fit
+         </MyButton>
+      </div>
+   );
+}
+
+function NodeWidthControl() {
+   return (
+      <div className="flex items-center gap-2">
+         <MyTextInput
+            placeholder="Width"
+            className="w-14 text-[12px]! p-1 px-2 h-auto rounded-sm"
+         />
+         <MyButton
+            size="sm"
+            className="rounded-sm text-gray-200 text-[12px]! h-auto py-1 px-4 bg-accent hover:bg-accent/80"
+         >
+            Fit
+         </MyButton>
+      </div>
    );
 }
