@@ -97,6 +97,7 @@ function GeneralStyleSection() {
       <div className="space-y-1">
          <ShapeControl />
          <BorderControl />
+         <TextControl />
       </div>
    );
 }
@@ -113,7 +114,7 @@ function ShapeControl() {
    return (
       <Collapse>
          <CollapseTrigger className="flex items-center justify-between">
-            <h1 className="text-sm font-semibold">Shape</h1>
+            <h1 className="text-xs font-semibold">Shape</h1>
             <ShapeSelector />
          </CollapseTrigger>
          <CollapseContent className="p-2 space-y-2">
@@ -141,7 +142,7 @@ function BorderControl() {
    return (
       <Collapse>
          <CollapseTrigger className="flex items-center justify-between">
-            <h1 className="text-sm font-semibold">Border</h1>
+            <h1 className="text-xs font-semibold">Border</h1>
             <BorderStyleSelector />
          </CollapseTrigger>
          <CollapseContent className="p-2 space-y-2">
@@ -151,6 +152,25 @@ function BorderControl() {
                   <BorderThicknessControl />
                   <FillColorSection />
                </div>
+            </div>
+         </CollapseContent>
+      </Collapse>
+   );
+}
+
+function TextControl() {
+   return (
+      <Collapse>
+         <CollapseTrigger className="flex items-center justify-between">
+            <h1 className="text-xs font-semibold">Text</h1>
+         </CollapseTrigger>
+         <CollapseContent className="p-2 space-y-2">
+            <div className="flex justify-between items-center">
+               <p className="text-xs font-semibold">Font Size</p>
+               <MyTextInput
+                  placeholder="Font Size"
+                  className="w-14 text-[12px]! p-1 px-2 h-auto rounded-sm"
+               />
             </div>
          </CollapseContent>
       </Collapse>
@@ -245,7 +265,13 @@ function BorderThicknessControl() {
    return (
       <DropdownMenu>
          <DropdownMenuTrigger onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md border border-accent hover:bg-accent">
+            <div
+               className={cn(
+                  "flex items-center justify-between gap-2",
+                  "cursor-pointer p-2 min-w-20 rounded-md",
+                  "border border-accent hover:bg-accent"
+               )}
+            >
                <p className="text-xs font-semibold">
                   {selectedBorderThickness}
                </p>
@@ -291,7 +317,13 @@ function ShapeSelector() {
    return (
       <DropdownMenu>
          <DropdownMenuTrigger onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md border border-accent hover:bg-accent">
+            <div
+               className={cn(
+                  "flex items-center justify-between gap-2",
+                  "p-2 rounded-md cursor-pointer w-20",
+                  "border border-accent hover:bg-accent"
+               )}
+            >
                <selectedShape.icon className="w-4 h-4" />
                <ChevronDown className="w-4 h-4" />
             </div>
@@ -328,7 +360,13 @@ function FillStyleSection() {
    return (
       <DropdownMenu>
          <DropdownMenuTrigger onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md border border-accent hover:bg-accent">
+            <div
+               className={cn(
+                  "flex items-center justify-between gap-2",
+                  "p-2 rounded-md cursor-pointer w-20",
+                  "border border-accent hover:bg-accent"
+               )}
+            >
                <selectedShape.icon className="w-4 h-4" />
                <ChevronDown className="w-4 h-4" />
             </div>
@@ -357,7 +395,7 @@ function FillColorSection() {
       <DropdownMenu>
          <DropdownMenuTrigger
             onClick={(e) => e.stopPropagation()}
-            className="w-11 h-7 rounded-sm cursor-pointer border border-gray-300"
+            className="w-20 h-7 rounded-sm cursor-pointer border"
             style={{
                backgroundColor: selectedColor,
             }}
