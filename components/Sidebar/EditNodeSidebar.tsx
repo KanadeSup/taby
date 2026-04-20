@@ -8,6 +8,13 @@ import {
    Circle,
    Triangle,
    Octagon,
+   BoldIcon,
+   ItalicIcon,
+   StrikethroughIcon,
+   UnderlineIcon,
+   AlignLeftIcon,
+   AlignCenterIcon,
+   AlignRightIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../shadcn/tooltip";
@@ -24,6 +31,7 @@ import {
 } from "../shadcn/dropdown-menu";
 import { MyTextInput } from "../Input/MyTextInput";
 import { MyButton } from "../Button/MyButton";
+import { MultipleSelectBar } from "../MultipleSelectBar/MultipleSelectBar";
 
 export function EditNodeSidebar() {
    const [selectedSection, setSelectedSection] = useState<string | null>(
@@ -165,12 +173,19 @@ function TextControl() {
             <h1 className="text-xs font-semibold">Text</h1>
          </CollapseTrigger>
          <CollapseContent className="p-2 space-y-2">
-            <div className="flex justify-between items-center">
-               <p className="text-xs font-semibold">Font Size</p>
-               <MyTextInput
-                  placeholder="Font Size"
-                  className="w-14 text-[12px]! p-1 px-2 h-auto rounded-sm"
-               />
+            <div className="flex items-center gap-2">
+               <FontFamilyControl />
+               <FontSizeControl />
+            </div>
+            <div className="flex items-center gap-2">
+               <FontWeightControl />
+               <FillColorSection />
+            </div>
+            <div className="flex items-center gap-2">
+               <FontDecorationControl />
+            </div>
+            <div className="flex items-center gap-2">
+               <FontAlignmentControl />
             </div>
          </CollapseContent>
       </Collapse>
@@ -395,7 +410,7 @@ function FillColorSection() {
       <DropdownMenu>
          <DropdownMenuTrigger
             onClick={(e) => e.stopPropagation()}
-            className="w-20 h-7 rounded-sm cursor-pointer border"
+            className="w-20 h-7 rounded-sm cursor-pointer border shrink-0"
             style={{
                backgroundColor: selectedColor,
             }}
@@ -407,6 +422,198 @@ function FillColorSection() {
             color picker
          </DropdownMenuContent>
       </DropdownMenu>
+   );
+}
+
+const fontSizes = ["8", "10", "12", "14", "18", "24", "28", "36", "48", "60"];
+function FontSizeControl() {
+   const [selectedFontSize, setSelectedFontSize] = useState<string>(
+      fontSizes[0]
+   );
+   return (
+      <DropdownMenu>
+         <DropdownMenuTrigger
+            onClick={(e) => e.stopPropagation()}
+            className={cn(
+               "flex items-center justify-between gap-2 shrink-0",
+               "w-20 h-7 rounded-sm cursor-pointer border",
+               "text-[12px] p-1 px-2"
+            )}
+         >
+            <p className="text-xs font-semibold">{selectedFontSize}</p>
+            <ChevronDown className="w-4 h-4" />
+         </DropdownMenuTrigger>
+         <DropdownMenuContent
+            className="dropdown-menu-trigger-width min-w-14 flex flex-col gap-1"
+            align="end"
+         >
+            {fontSizes.map((size) => (
+               <DropdownMenuItem
+                  key={size}
+                  className={cn(
+                     "cursor-pointer",
+                     selectedFontSize === size && "bg-accent"
+                  )}
+                  onClick={(e) => {
+                     e.stopPropagation();
+                     setSelectedFontSize(size);
+                  }}
+               >
+                  <p className="text-xs font-semibold">{size}</p>
+               </DropdownMenuItem>
+            ))}
+         </DropdownMenuContent>
+      </DropdownMenu>
+   );
+}
+
+const FontWeight = ["Thin", "Light", "Regular", "Medium", "Semi-bold", "Bold"];
+function FontWeightControl() {
+   const [selectedFontWeight, setSelectedFontWeight] = useState<string>(
+      FontWeight[0]
+   );
+   return (
+      <DropdownMenu>
+         <DropdownMenuTrigger
+            onClick={(e) => e.stopPropagation()}
+            className={cn(
+               "flex items-center justify-between gap-2",
+               "w-full h-7 rounded-sm cursor-pointer border",
+               "text-[12px] p-1 px-2"
+            )}
+         >
+            <p className="text-xs font-semibold">{selectedFontWeight}</p>
+            <ChevronDown className="w-4 h-4" />
+         </DropdownMenuTrigger>
+         <DropdownMenuContent
+            className="dropdown-menu-trigger-width min-w-14 flex flex-col gap-1"
+            align="end"
+         >
+            {FontWeight.map((weight) => (
+               <DropdownMenuItem
+                  key={weight}
+                  className={cn(
+                     "cursor-pointer",
+                     selectedFontWeight === weight && "bg-accent"
+                  )}
+                  onClick={(e) => {
+                     e.stopPropagation();
+                     setSelectedFontWeight(weight);
+                  }}
+               >
+                  <p className="text-xs font-semibold">{weight}</p>
+               </DropdownMenuItem>
+            ))}
+         </DropdownMenuContent>
+      </DropdownMenu>
+   );
+}
+
+const fontFamilies = [
+   "Arial",
+   "Helvetica",
+   "Verdana",
+   "Georgia",
+   "Times New Roman",
+   "Courier New",
+   "Monospace",
+];
+function FontFamilyControl() {
+   const [selectedFontFamily, setSelectedFontFamily] = useState<string>(
+      fontFamilies[0]
+   );
+   return (
+      <DropdownMenu>
+         <DropdownMenuTrigger
+            onClick={(e) => e.stopPropagation()}
+            className={cn(
+               "flex items-center justify-between gap-2",
+               "w-full h-7 rounded-sm cursor-pointer border",
+               "text-[12px] p-1 px-2"
+            )}
+         >
+            <p className="text-xs font-semibold truncate">
+               {selectedFontFamily}
+            </p>
+            <ChevronDown className="w-4 h-4" />
+         </DropdownMenuTrigger>
+         <DropdownMenuContent
+            className="dropdown-menu-trigger-width flex flex-col gap-1"
+            align="end"
+         >
+            {fontFamilies.map((family) => (
+               <DropdownMenuItem
+                  key={family}
+                  className={cn(
+                     "cursor-pointer",
+                     selectedFontFamily === family && "bg-accent"
+                  )}
+                  onClick={(e) => {
+                     e.stopPropagation();
+                     setSelectedFontFamily(family);
+                  }}
+               >
+                  <p className="text-xs font-semibold">{family}</p>
+               </DropdownMenuItem>
+            ))}
+         </DropdownMenuContent>
+      </DropdownMenu>
+   );
+}
+
+function FontDecorationControl() {
+   const items = [
+      {
+         label: <BoldIcon className="w-4 h-4 stroke-3" />,
+         value: "bold",
+      },
+      {
+         label: <ItalicIcon className="w-4 h-4" />,
+         value: "italic",
+      },
+      {
+         label: <StrikethroughIcon className="w-4 h-4" />,
+         value: "strikethrough",
+      },
+      {
+         label: <UnderlineIcon className="w-4 h-4" />,
+         value: "underline",
+      },
+   ];
+   return (
+      <MultipleSelectBar
+         containerClass="w-full"
+         itemWrapperClass="py-2"
+         items={items}
+         onChange={(value, isActive, allActiveValues) => {
+            console.log(value, isActive, allActiveValues);
+         }}
+      />
+   );
+}
+
+function FontAlignmentControl() {
+   const items = [
+      {
+         label: <AlignLeftIcon className="w-4 h-4" />,
+         value: "left",
+      },
+      {
+         label: <AlignCenterIcon className="w-4 h-4" />,
+         value: "center",
+      },
+      {
+         label: <AlignRightIcon className="w-4 h-4" />,
+         value: "right",
+      },
+   ];
+   return (
+      <MultipleSelectBar
+         containerClass="w-full"
+         itemWrapperClass="py-2"
+         items={items}
+         mode="single"
+      />
    );
 }
 
