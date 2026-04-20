@@ -106,6 +106,7 @@ function GeneralStyleSection() {
          <ShapeControl />
          <BorderControl />
          <TextControl />
+         <BranchControl />
       </div>
    );
 }
@@ -187,6 +188,23 @@ function TextControl() {
             <div className="flex items-center gap-2">
                <FontAlignmentControl />
             </div>
+         </CollapseContent>
+      </Collapse>
+   );
+}
+
+function BranchControl() {
+   return (
+      <Collapse>
+         <CollapseTrigger className="flex items-center justify-between">
+            <h1 className="text-xs font-semibold">Branch</h1>
+         </CollapseTrigger>
+         <CollapseContent className="p-2 space-y-2">
+            <div className="flex items-center gap-2">
+               <LineStyleControl />
+               <FillColorSection />
+            </div>
+            <BranchWeightControl />
          </CollapseContent>
       </Collapse>
    );
@@ -509,6 +527,77 @@ function FontWeightControl() {
    );
 }
 
+
+type BranchWeight = {
+   label: string;
+   value: string;
+};
+
+const BranchWeight: BranchWeight[] = [
+   {
+      label: "Extra thin",
+      value: "extra-thin",
+   },
+   {
+      label: "Thin",
+      value: "thin",
+   },
+   {
+      label: "Medium",
+      value: "medium",
+   },
+   {
+      label: "Thick",
+      value: "thick",
+   },
+   {
+      label: "Extra thick",
+      value: "extra-thick",
+   },
+];
+
+function BranchWeightControl() {
+   const [selectedBranchWeight, setSelectedBranchWeight] =
+      useState<BranchWeight>(BranchWeight[0]);
+   return (
+      <DropdownMenu>
+         <DropdownMenuTrigger
+            onClick={(e) => e.stopPropagation()}
+            className={cn(
+               "flex items-center justify-between gap-2",
+               "w-full h-7 rounded-sm cursor-pointer border",
+               "text-[12px] p-1 px-2"
+            )}
+         >
+            <p className="text-xs font-semibold">
+               {selectedBranchWeight.label}
+            </p>
+            <ChevronDown className="w-4 h-4" />
+         </DropdownMenuTrigger>
+         <DropdownMenuContent
+            className="dropdown-menu-trigger-width min-w-14 flex flex-col gap-1"
+            align="end"
+         >
+            {BranchWeight.map((weight) => (
+               <DropdownMenuItem
+                  key={weight.value}
+                  className={cn(
+                     "cursor-pointer",
+                     selectedBranchWeight.value === weight.value && "bg-accent"
+                  )}
+                  onClick={(e) => {
+                     e.stopPropagation();
+                     setSelectedBranchWeight(weight);
+                  }}
+               >
+                  <p className="text-xs font-semibold">{weight.label}</p>
+               </DropdownMenuItem>
+            ))}
+         </DropdownMenuContent>
+      </DropdownMenu>
+   );
+}
+
 const fontFamilies = [
    "Arial",
    "Helvetica",
@@ -614,6 +703,93 @@ function FontAlignmentControl() {
          items={items}
          mode="single"
       />
+   );
+}
+
+function LineStyleControl() {
+   const lineStyles = ["solid", "dashed", "dotted"];
+   const [selectedLineStyle, setSelectedLineStyle] = useState<string>(
+      lineStyles[0]
+   );
+   return (
+      <DropdownMenu>
+         <DropdownMenuTrigger
+            className={cn(
+               "flex items-center justify-between gap-2",
+               "w-full h-7 rounded-sm cursor-pointer border",
+               "text-[12px] p-1 px-2"
+            )}
+            onClick={(e) => e.stopPropagation()}
+         >
+            <div className="w-full px-2">
+               {selectedLineStyle === "solid" && (
+                  <div
+                     className="w-full h-[1px] stroke-gray-200 border border-white"
+                     style={{
+                        borderStyle: "solid",
+                     }}
+                  />
+               )}
+               {selectedLineStyle === "dashed" && (
+                  <div
+                     className="w-full h-[1px] stroke-gray-200 border border-white"
+                     style={{
+                        borderStyle: "dashed",
+                     }}
+                  />
+               )}
+               {selectedLineStyle === "dotted" && (
+                  <div
+                     className="w-full h-[1px] stroke-gray-200 border border-white"
+                     style={{
+                        borderStyle: "dotted",
+                     }}
+                  />
+               )}
+            </div>
+            <ChevronDown className="w-4 h-4" />
+         </DropdownMenuTrigger>
+         <DropdownMenuContent className="dropdown-menu-trigger-width flex flex-col gap-1">
+            {lineStyles.map((style) => (
+               <DropdownMenuItem
+                  key={style}
+                  className={cn(
+                     "cursor-pointer py-3 px-4",
+                     selectedLineStyle === style && "bg-accent"
+                  )}
+                  onClick={(e) => {
+                     e.stopPropagation();
+                     setSelectedLineStyle(style);
+                  }}
+               >
+                  {style === "solid" && (
+                     <div
+                        className="w-full h-[1px] stroke-gray-200 border border-white"
+                        style={{
+                           borderStyle: "solid",
+                        }}
+                     />
+                  )}
+                  {style === "dashed" && (
+                     <div
+                        className="w-full h-[1px] stroke-gray-200 border border-white"
+                        style={{
+                           borderStyle: "dashed",
+                        }}
+                     />
+                  )}
+                  {style === "dotted" && (
+                     <div
+                        className="w-full h-[1px] stroke-gray-200 border border-white"
+                        style={{
+                           borderStyle: "dotted",
+                        }}
+                     />
+                  )}
+               </DropdownMenuItem>
+            ))}
+         </DropdownMenuContent>
+      </DropdownMenu>
    );
 }
 
