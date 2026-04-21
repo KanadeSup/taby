@@ -32,6 +32,7 @@ import {
 import { MyTextInput } from "../Input/MyTextInput";
 import { MyButton } from "../Button/MyButton";
 import { MultipleSelectBar } from "../MultipleSelectBar/MultipleSelectBar";
+import { FillStyleSelector } from "../EditNodeSidebar/Input/FillStyleSelector";
 
 export function EditNodeSidebar() {
    const [selectedSection, setSelectedSection] = useState<string | null>(
@@ -130,7 +131,7 @@ function ShapeControl() {
             <div className="flex justify-between items-center">
                <p className="text-xs font-semibold">Fill</p>
                <div className="flex items-center gap-2">
-                  <FillStyleSection />
+                  <FillStyleSelector />
                   <FillColorSection />
                </div>
             </div>

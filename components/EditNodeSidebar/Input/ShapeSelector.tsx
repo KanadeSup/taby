@@ -1,0 +1,84 @@
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuTrigger,
+} from "@/components/shadcn/dropdown-menu";
+import { cn } from "@/lib/shadnc-utils";
+import {
+   Octagon,
+   Circle,
+   RectangleHorizontal,
+   Triangle,
+   ChevronDown,
+} from "lucide-react";
+import { useState } from "react";
+
+/* ------------ Type ------------ */
+export type ShapeSelectorProps = {
+   value?: NodeShape;
+   onChange?: (value: NodeShape) => void;
+};
+
+export type NodeShape = "rectangle" | "circle" | "triangle" | "octagon";
+
+export type ShapeItem = {
+   value: NodeShape;
+   icon: React.ElementType;
+};
+
+/* ------------ Constant ------------ */
+const shapes: ShapeItem[] = [
+   { value: "rectangle", icon: RectangleHorizontal },
+   { value: "circle", icon: Circle },
+   { value: "triangle", icon: Triangle },
+   { value: "octagon", icon: Octagon },
+];
+
+/* ------------ Component ------------ */
+export function ShapeSelector(props: ShapeSelectorProps) {
+   const { value: propValue, onChange } = props;
+
+   const [internalSelectedShape, setInternalSelectedShape] =
+      useState<ShapeItem>(shapes[0]);
+
+   let selectedShape = internalSelectedShape;
+   if (propValue) {
+      selectedShape = shapes.find((shape) => shape.value === propValue)!;
+   }
+
+   return (
+      <DropdownMenu>
+         <DropdownMenuTrigger onClick={(e) => e.stopPropagation()}>
+            <div
+               className={cn(
+                  "flex items-center justify-between gap-2",
+                  "p-2 rounded-md cursor-pointer w-20",
+                  "border border-accent hover:bg-accent"
+               )}
+            >
+               <selectedShape.icon className="w-4 h-4" />
+               <ChevronDown className="w-4 h-4" />
+            </div>
+         </DropdownMenuTrigger>
+         <DropdownMenuContent
+            className="w-64 grid grid-cols-3 gap-2"
+            align="end"
+         >
+            {shapes.map((shape) => (
+               <DropdownMenuItem
+                  key={shape.value}
+                  className="cursor-pointer w-full h-14 p-3"
+                  onClick={(e) => {
+                     e.stopPropagation();
+                     onChange?.(shape.value);
+                     setInternalSelectedShape(shape);
+                  }}
+               >
+                  <shape.icon className="w-full! h-full! stroke-gray-200" />
+               </DropdownMenuItem>
+            ))}
+         </DropdownMenuContent>
+      </DropdownMenu>
+   );
+}
