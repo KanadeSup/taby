@@ -21,7 +21,6 @@ import { RootNode } from "../FlowNode/RootNode";
 import { TabNode } from "../FlowNode/TabNode";
 import { MindFlowToolbar } from "../Toolbar/MindFlowToolbar";
 import { ActiveTabSidebar } from "../Sidebar/ActiveTabSidebar";
-import { EditNodeSidebar } from "../Sidebar/EditNodeSidebar";
 import {
    MindFlowLayoutProvider,
    useMindFlowStateStore,
@@ -33,6 +32,7 @@ import { CalculateDimension } from "../CalculateDimension/CalculateDimension";
 import { InsertNodeMenu } from "../Menu/InsertNodeMenu";
 import { CreateCategoryNode } from "../FlowNode/CreateCateogryNode";
 import { CategoryNode } from "../FlowNode/CategoryNode";
+import { EditNodeSidebar } from "../EditNodeSidebar/EditNodeSidebar";
 
 const NodeTypes = {
    root: RootNode,

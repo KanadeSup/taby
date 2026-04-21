@@ -1,3 +1,4 @@
+import { buttonVariants } from "@/components/shadcn/button";
 import {
    DropdownMenu,
    DropdownMenuContent,
@@ -29,16 +30,18 @@ export function BorderStyleSelector(props: BorderStyleSelectorProps) {
       <DropdownMenu>
          <DropdownMenuTrigger
             onClick={(e) => e.stopPropagation()}
-            className="w-20"
+            className={cn(
+               buttonVariants({ variant: "secondary" }),
+               "flex items-center justify-between gap-2 shrink-0",
+               "rounded-sm cursor-pointer h-7 w-20"
+            )}
          >
-            <div className="flex items-center justify-between gap-2 cursor-pointer p-2 rounded-md border border-accent hover:bg-accent">
-               {selectedBorderStyle === "none" ? (
-                  <p className="text-xs font-semibold text-center">None</p>
-               ) : (
-                  <BorderStyleIcon style={selectedBorderStyle} />
-               )}
-               <ChevronDown className="w-4 h-4" />
-            </div>
+            {selectedBorderStyle === "none" ? (
+               <p className="text-xs font-semibold text-center">None</p>
+            ) : (
+               <BorderStyleIcon style={selectedBorderStyle} />
+            )}
+            <ChevronDown className="w-4 h-4" />
          </DropdownMenuTrigger>
          <DropdownMenuContent className="w-40 flex flex-col gap-1" align="end">
             {borderStyles

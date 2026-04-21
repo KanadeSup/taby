@@ -10,7 +10,9 @@ export type MultipleSelectBarProps = {
    items: MultipleSelectBarItem[];
    containerClass?: string;
    itemWrapperClass?: string;
-   mode? : "single" | "multiple";
+   mode?: "single" | "multiple";
+   value?: string[];
+   defaultValue?: string[];
    onChange?: (
       value: string,
       isActived: boolean,
@@ -23,9 +25,20 @@ export function MultipleSelectBar({
    containerClass,
    itemWrapperClass,
    mode = "multiple",
+   value,
+   defaultValue = [],
    onChange,
 }: MultipleSelectBarProps) {
-   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+   const [internalSelectedItems, setInternalSelectedItems] =
+      useState<string[]>(defaultValue);
+   const selectedItems = value ?? internalSelectedItems;
+
+   const setSelectedItems = (nextValue: string[]) => {
+      if (value !== undefined) {
+         return;
+      }
+      setInternalSelectedItems(nextValue);
+   };
    const handleItemClick = (value: string) => {
       if (mode === "single") {
          setSelectedItems([value]);

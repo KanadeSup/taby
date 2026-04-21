@@ -1,3 +1,4 @@
+import { buttonVariants } from "@/components/shadcn/button";
 import {
    DropdownMenu,
    DropdownMenuContent,
@@ -52,12 +53,14 @@ export function ShapeSelector(props: ShapeSelectorProps) {
          <DropdownMenuTrigger onClick={(e) => e.stopPropagation()}>
             <div
                className={cn(
+                  buttonVariants({ variant: "secondary" }),
                   "flex items-center justify-between gap-2",
-                  "p-2 rounded-md cursor-pointer w-20",
-                  "border border-accent hover:bg-accent"
+                  "rounded-sm cursor-pointer h-7 w-20",
                )}
             >
-               <selectedShape.icon className="w-4 h-4" />
+               <div className="flex items-center justify-center w-full">
+                  <selectedShape.icon className="w-4 h-4" />
+               </div>
                <ChevronDown className="w-4 h-4" />
             </div>
          </DropdownMenuTrigger>
