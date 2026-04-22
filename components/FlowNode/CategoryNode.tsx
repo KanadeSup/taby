@@ -13,13 +13,11 @@ export function CategoryNode(props: NodeProps) {
          <NodeResizer
             color="#ff0071"
             isVisible={selected}
-            minWidth={100}
-            minHeight={30}
          />
          <div
             className={cn(
                "flex items-center gap-2 border-2 border-transparent rounded-sm",
-               "w-full h-full"
+               "w-full h-full overflow-hidden"
             )}
          >
             <Handle
@@ -28,7 +26,12 @@ export function CategoryNode(props: NodeProps) {
                position={Position.Left}
                className="invisible"
             />
-            <div className="rounded-sm p-3 border border-transparent hover:border-accent w-full h-full">
+            <div
+               className={cn(
+                  "rounded-sm p-3 border border-transparent hover:border-accent w-full h-full",
+                  "flex items-center"
+               )}
+            >
                <div className="flex items-center gap-1 text-gray-200">
                   <h1 className="text-sm font-semibold truncate">{name}</h1>
                </div>

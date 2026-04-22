@@ -25,15 +25,11 @@ export function RootNode(props: NodeProps) {
    };
    return (
       <>
-         <NodeResizer
-            color="#ff0071"
-            isVisible={selected}
-            minWidth={100}
-            minHeight={30}
-         />
+         <NodeResizer color="#ff0071" isVisible={selected} />
          <div
             className={cn(
-               "flex items-center  bg-blue-700 p-4 rounded-md border-2 border-black/50 w-full h-full"
+               "flex items-center bg-blue-700 p-4 rounded-md border-2 border-black/50",
+               "w-full h-full overflow-hidden"
             )}
          >
             <Handle
@@ -51,7 +47,12 @@ export function RootNode(props: NodeProps) {
             >
                <Plus className="w-3 h-3" />
             </div>
-            <div className="text-gray-300">
+            <div
+               className={cn(
+                  "text-gray-300 overflow-hidden w-full h-full",
+                  "flex items-center"
+               )}
+            >
                <div>Tab root</div>
             </div>
             <div
