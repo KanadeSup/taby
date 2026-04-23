@@ -23,7 +23,7 @@ export type FillStyleSelectorProps = {
 
 export type FillStyle =
    | "flat"
-   | "diagonal"
+   | "thin-diagonal"
    | "thick-diagonal"
    | "dash"
    | "thick-dash"
@@ -36,7 +36,7 @@ export type FillStyleItem = {
 
 const fillStyles: FillStyleItem[] = [
    { value: "flat", icon: FlatFillStyleIcon },
-   { value: "diagonal", icon: ThinDiagonalFillStyleIcon },
+   { value: "thin-diagonal", icon: ThinDiagonalFillStyleIcon },
    { value: "thick-diagonal", icon: ThickDiagonalFillStyleIcon },
    { value: "thick-dash", icon: ThickDashFillStyleIcon },
    { value: "thin-dash", icon: ThinDashFillStyleIcon },

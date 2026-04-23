@@ -2,9 +2,24 @@ import { cn } from "@/lib/shadnc-utils";
 import { Handle, NodeProps, NodeResizer, Position } from "@xyflow/react";
 import { Plus } from "lucide-react";
 import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
+import { EditNodeStyleState } from "../EditNodeSidebar/types";
+import { getBorderStyle, getBorderWidth } from "@/lib/utils";
+import {
+   ThickDashFillStyleIcon,
+   ThickDiagonalFillStyleIcon,
+   ThinDashFillStyleIcon,
+   ThinDiagonalFillStyleIcon,
+} from "../Icon/FillStyleIcon";
 
 export function RootNode(props: NodeProps) {
    const { selected } = props;
+
+   const { style: nodeStyle = {} } = props.data as {
+      title: string;
+      style?: Partial<EditNodeStyleState>;
+   };
+
+   console.log(props.data);
    const { openNodeMenuForInsert } = useMindFlowStateStore(
       (state) => state.action
    );
@@ -28,10 +43,51 @@ export function RootNode(props: NodeProps) {
          <NodeResizer color="#ff0071" isVisible={selected} />
          <div
             className={cn(
-               "flex items-center bg-blue-700 p-4 rounded-md border-2 border-black/50",
-               "w-full h-full overflow-hidden"
+               "flex items-center p-4 rounded-md",
+               "w-full h-full relative overflow-hidden"
             )}
+            style={{
+               borderWidth: getBorderWidth(nodeStyle.border?.thickness),
+               borderColor: nodeStyle.border?.color,
+               borderStyle: getBorderStyle(nodeStyle.border?.style),
+               backgroundColor:
+                  nodeStyle.shape?.fillStyle === "flat"
+                     ? nodeStyle.shape?.fillColor
+                     : undefined,
+            }}
          >
+            {nodeStyle.shape?.fillStyle === "thin-dash" && (
+               <ThinDashFillStyleIcon
+                  className="absolute top-0 left-0 w-full h-full -z-10"
+                  preserveAspectRatio="none"
+                  viewBox="3 10 36 20"
+                  style={{ color: nodeStyle.shape?.fillColor }}
+               />
+            )}
+            {nodeStyle.shape?.fillStyle === "thick-dash" && (
+               <ThickDashFillStyleIcon
+                  className="absolute top-0 left-0 w-full h-full -z-10"
+                  preserveAspectRatio="none"
+                  viewBox="2 9 36 21"
+                  style={{ color: nodeStyle.shape?.fillColor }}
+               />
+            )}
+            {nodeStyle.shape?.fillStyle === "thick-diagonal" && (
+               <ThickDiagonalFillStyleIcon
+                  className="absolute top-0 left-0 w-full h-full -z-10"
+                  preserveAspectRatio="none"
+                  viewBox="3 10 34 22"
+                  style={{ color: nodeStyle.shape?.fillColor }}
+               />
+            )}
+            {nodeStyle.shape?.fillStyle === "thin-diagonal" && (
+               <ThinDiagonalFillStyleIcon
+                  className="absolute top-0 left-0 w-full h-full -z-10"
+                  preserveAspectRatio="none"
+                  viewBox="2 10 36 22"
+                  style={{ color: nodeStyle.shape?.fillColor }}
+               />
+            )}
             <Handle
                id="left"
                type="source"

@@ -83,11 +83,6 @@ export function EditNodeSidebar() {
          ...patch,
          data: nextData,
       });
-      setSelectedNode({
-         ...selectedNode,
-         ...patch,
-         data: nextData,
-      });
    };
 
    return (
