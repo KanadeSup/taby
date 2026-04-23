@@ -3,7 +3,13 @@ import { Handle, NodeProps, NodeResizer, Position } from "@xyflow/react";
 import { Plus } from "lucide-react";
 import { useMindFlowStateStore } from "../Provider/MindFlowStateProvider";
 import { EditNodeStyleState } from "../EditNodeSidebar/types";
-import { getBorderStyle, getBorderWidth } from "@/lib/utils";
+import {
+   getBorderStyle,
+   getBorderWidth,
+   getFontSize,
+   getFontWeight,
+   getTextDecoration,
+} from "@/lib/utils";
 import {
    ThickDashFillStyleIcon,
    ThickDiagonalFillStyleIcon,
@@ -56,6 +62,14 @@ export function RootNode(props: NodeProps) {
                      : undefined,
                borderRadius:
                   nodeStyle.shape?.shapeType === "circle" ? "50%" : undefined,
+               fontSize: getFontSize(nodeStyle.text?.fontSize),
+               fontWeight: getFontWeight(nodeStyle.text?.fontWeight),
+               color: nodeStyle.text?.color,
+               textDecoration: getTextDecoration(nodeStyle.text?.decorations),
+               fontStyle: nodeStyle.text?.decorations.includes("italic")
+                  ? "italic"
+                  : undefined,
+               textAlign: nodeStyle.text?.align,
             }}
          >
             {nodeStyle.shape?.fillStyle === "thin-dash" && (
@@ -111,7 +125,7 @@ export function RootNode(props: NodeProps) {
                   "flex items-center"
                )}
             >
-               <div>Tab root</div>
+               <div className="w-full">Tab root</div>
             </div>
             <div
                className={cn(
