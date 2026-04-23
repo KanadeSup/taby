@@ -7,10 +7,8 @@ import {
 } from "@/components/shadcn/dropdown-menu";
 import { cn } from "@/lib/shadnc-utils";
 import {
-   Octagon,
    Circle,
    RectangleHorizontal,
-   Triangle,
    ChevronDown,
 } from "lucide-react";
 import { useState } from "react";
@@ -21,7 +19,7 @@ export type ShapeSelectorProps = {
    onChange?: (value: NodeShape) => void;
 };
 
-export type NodeShape = "rectangle" | "circle" | "triangle" | "octagon";
+export type NodeShape = "rectangle" | "circle";
 
 export type ShapeItem = {
    value: NodeShape;
@@ -32,8 +30,6 @@ export type ShapeItem = {
 const shapes: ShapeItem[] = [
    { value: "rectangle", icon: RectangleHorizontal },
    { value: "circle", icon: Circle },
-   { value: "triangle", icon: Triangle },
-   { value: "octagon", icon: Octagon },
 ];
 
 /* ------------ Component ------------ */

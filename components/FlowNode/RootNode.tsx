@@ -44,7 +44,7 @@ export function RootNode(props: NodeProps) {
          <div
             className={cn(
                "flex items-center p-4 rounded-md",
-               "w-full h-full relative overflow-hidden"
+               "w-full h-full relative"
             )}
             style={{
                borderWidth: getBorderWidth(nodeStyle.border?.thickness),
@@ -54,6 +54,8 @@ export function RootNode(props: NodeProps) {
                   nodeStyle.shape?.fillStyle === "flat"
                      ? nodeStyle.shape?.fillColor
                      : undefined,
+               borderRadius:
+                  nodeStyle.shape?.shapeType === "circle" ? "50%" : undefined,
             }}
          >
             {nodeStyle.shape?.fillStyle === "thin-dash" && (
